@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>StegoSafe | Login</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+
+</head>
+<body>
+
+<div class="navbar">
+    <div class="nav-left">
+        <img class="lock-icon" onclick="location.reload()" src="https://cdn-icons-png.flaticon.com/512/3064/3064197.png">
+        <h1 onclick="location.reload()">StegoSafe</h1>
+    </div>
+
+    <div class="nav-right">
+        <!-- for future pages -->
+        <a href="#">Docs</a>
+        <a href="#">Support</a>
+    </div>
+</div>
+
+
+<h1 class="hero-title">StegoSafe</h1>
+
+{% if error %}
+  <p style="color:red; margin-bottom:10px;">{{ error }}</p>
+{% endif %}
+
+<div class="card">
+    <h2>Login to your account</h2>
+
+    <form action="/login" method="POST">
+        <input type="text" name="username" placeholder="Username" required>
+        <input type="password" name="password" placeholder="Password" required>
+        <button type="submit">Sign In</button>
+    </form>
+
+    <p>Don't have an account? <a href="/signup">Create one</a></p>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Dashboard | StegoSafe</title>
+
+<!-- Global styles -->
+<link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+
+<!-- Dashboard-specific styles -->
+<link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}">
+
+<script>
+function toggleAccount() {
+    const popup = document.getElementById("accountPopup");
+    popup.style.display = popup.style.display === "block" ? "none" : "block";
+}
+</script>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<div class="navbar">
+    <div class="nav-left">
+        <img class="lock-icon"
+             src="https://cdn-icons-png.flaticon.com/512/3064/3064197.png"
+             onclick="location.reload()">
+        <h1 onclick="location.reload()">Dashboard</h1>
+    </div>
+
+    <div class="nav-right">
+        <span class="account-link" onclick="toggleAccount()">Account</span>
+    </div>
+</div>
+
+<!-- ACCOUNT POPUP -->
+<div class="account-popup" id="accountPopup">
+    <h3>Account</h3>
+    <p><strong>Username:</strong> {{ session['user'] }}</p>
+    <p><strong>Status:</strong> Active</p>
+
+    <a href="/logout">Logout</a>
+</div>
+
+<!-- PAGE TITLE -->
+<h1 class="hero-title">Dashboard</h1>
+
+<!-- MAIN CONTENT -->
+<div class="dashboard-container">
+
+    <h2 class="dash-heading">Search users to chat</h2>
+
+    <!-- SEARCH FORM -->
+    <form class="search-box" action="/search" method="POST">
+        <input type="text" name="search" placeholder="Enter username..." required>
+        <button type="submit">Search</button>
+    </form>
+
+    <!-- SEARCH RESULTS -->
+    {% if users %}
+    <div class="results-list">
+        {% for user in users %}
+            {% if user.username!=session['user']%}
+                <a href="/chat/{{ user.username }}" class="user-link">
+                    <div class="user-item">👤 {{ user.username }}</div>
+                </a>
+            {% endif %}
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if users is defined and users|length == 0 %}
+        <p class="no-results">No users found.</p>
+    {% endif %}
+
+
+</div>
+
+</body>
+</html>
