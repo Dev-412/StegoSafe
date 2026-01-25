@@ -1,0 +1,283 @@
+/* =====================
+   THEME VARIABLES
+===================== */
+
+/* DEFAULT */
+body.default-theme {
+    --bg-main: #2a1f52;
+
+    --glass-light: rgba(255,255,255,0.08);
+    --glass-mid: rgba(255,255,255,0.12);
+    --glass-border: rgba(255,255,255,0.18);
+
+    --accent: #9b5cf0;
+    --accent-soft: #7442d7;
+
+    --text-main: white;
+    --text-muted: #c7b7ff;
+
+    --danger: #f87171;
+
+    --navbar-bg: rgba(10,10,16,0.95);
+
+    --pfp-border: #9b5cf0;
+}
+
+/* DARK */
+body.dark-theme {
+    --bg-main: #1a1a1b;              /* page background */
+
+    --glass-light: rgba(255,255,255,0.06);
+    --glass-mid: rgba(255,255,255,0.09);
+    --glass-border: rgba(255,255,255,0.14);
+
+    --accent: #6c8cff;
+    --accent-soft: #4f66ff;
+
+    --text-main: #f4f6ff;
+    --text-muted: #a8b2ff;
+
+    --danger: #ff6b6b;
+
+    --navbar-bg: rgba(1, 1, 2, 0.98);   /* DARKER than bg for contrast */
+
+    --pfp-border: grey;
+}
+
+/* LIGHT */
+body.light-theme {
+    --bg-main: #f3f2fb;
+
+    --glass-light: rgba(0,0,0,0.03);
+    --glass-mid: rgba(0,0,0,0.06);
+    --glass-border: rgba(0,0,0,0.12);
+
+    --accent: #6a4cff;
+    --accent-soft: #8a73ff;
+
+    --text-main: #1b1b22;
+    --text-muted: #5a55aa;
+
+    --danger: #d93a3a;
+
+    --navbar-bg: rgba(255,255,255,0.85);
+
+    --pfp-border: silver;
+}
+
+/* =====================
+   PAGE BACKGROUND
+===================== */
+
+body {
+    background: var(--bg-main);
+    color: var(--text-main);
+}
+
+
+/* =====================
+   NAVBAR
+===================== */
+
+.profile-navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 68px;
+
+    background: var(--navbar-bg);
+    backdrop-filter: blur(12px);
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 0 40px;
+    border-bottom: 1px solid var(--glass-border);
+    z-index: 999;
+}
+
+.nav-title {
+    font-size: 22px;
+    font-weight: 700;
+}
+
+/* right side link */
+.back-link {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: 0.2s ease;
+}
+
+.back-link:hover {
+    opacity: 0.9;
+}
+
+
+/* =====================
+   PAGE GRID
+===================== */
+
+.profile-page {
+    max-width: 1150px;
+    margin: 135px auto 40px;
+    padding: 0 20px;
+
+    display: grid;
+    grid-template-columns: 330px 1fr;
+    gap: 35px;
+}
+
+
+/* =====================
+   LEFT CARD
+===================== */
+
+.profile-card {
+    background: var(--glass-light);
+    border-radius: 18px;
+    border: 1px solid var(--glass-border);
+    padding: 28px;
+    text-align: center;
+    
+}
+
+.profile-avatar {
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--pfp-border);
+}
+
+
+/* =====================
+   BUTTONS
+===================== */
+
+.primary-btn {
+    margin-top: 12px;
+    width: 100%;
+    padding: 13px;
+
+    background: linear-gradient(135deg,
+        var(--accent-soft),
+        var(--accent)
+    );
+
+    border: none;
+    border-radius: 12px;
+    font-weight: bold;
+    color: white;
+    cursor: pointer;
+}
+
+.secondary-btn {
+    width: 100%;
+    padding: 12px;
+    border-radius: 12px;
+    background: var(--glass-mid);
+    border: none;
+    cursor: pointer;
+    color: var(--text-main);
+}
+
+.danger-btn {
+    background: var(--danger);
+    color: white;
+    padding: 12px;
+    width: 100%;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+}
+
+.logout-link {
+    display: block;
+    margin-top: 25px;
+    text-align: center;
+    color: var(--danger);
+    font-weight: bold;
+    text-decoration: none;
+}
+
+
+/* =====================
+   SETTINGS CARD
+===================== */
+
+.settings-card {
+    background: var(--glass-light);
+    border-radius: 18px;
+    border: 1px solid var(--glass-border);
+    padding: 32px;
+}
+
+.settings-card h3 {
+    margin-bottom: 10px;
+}
+
+.settings-card textarea,
+.settings-card input,
+.theme-select {
+    width: 100%;
+    background: var(--glass-mid);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    padding: 13px;
+    color: var(--text-main);
+    margin-bottom: 18px;
+}
+
+
+/* =====================
+   THEME SELECT
+===================== */
+
+.theme-select {
+    padding: 12px 36px 12px 14px;
+
+    border: 1px solid var(--accent);
+    cursor: pointer;
+    outline: none;
+
+    appearance: none;
+
+    background-image:
+        url("data:image/svg+xml;utf8,<svg fill='white' height='16' width='16' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'><polygon points='0,0 20,0 10,10'/></svg>");
+
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    background-size: 12px;
+}
+
+/* options */
+.theme-select option {
+    background: var(--bg-main);
+    color: var(--text-main);
+}
+
+
+/* =====================
+   DANGER AREAS
+===================== */
+
+.danger-section {
+    margin-top: 35px;
+    border-top: 1px solid var(--glass-border);
+    padding-top: 25px;
+}
+
+.delete-box summary {
+    cursor: pointer;
+    font-weight: bold;
+    color: var(--danger);
+    margin-bottom: 10px;
+}
+
+.bio{
+    color: var(--text-main);
+}

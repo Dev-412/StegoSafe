@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Profile | StegoSafe</title>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='profile.css') }}">
+
+<!-- Back icon link -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+
+
+<script>
+function previewAvatar(event) {
+    const file = event.target.files[0];
+
+    if (!file) return;
+
+    const img = document.getElementById("avatarPreview");
+
+    const url = URL.createObjectURL(file);
+    img.src = url;
+}
+
+</script>
+
+</head>
+
+<body class="{{ theme|lower }}-theme">
+
+<!-- ================= NAVBAR ================= -->
+<div class="profile-navbar">
+
+    <div class="nav-left">
+        <span class="nav-title">Profile</span>
+    </div>
+
+    <div class="nav-right">
+        <a href="/dashboard" class="back-link">
+            <i class="bi bi-arrow-left"></i>
+            Back
+        </a>
+
+    </div>
+
+</div>
+
+
+<!-- ================= PAGE ================= -->
+
+<div class="profile-page">
+
+    <!-- LEFT CARD -->
+    <div class="profile-card">
+
+        <img id="avatarPreview" src="{{ pfp }}" class="profile-avatar">
+
+        <form action="/upload-avatar" method="POST" enctype="multipart/form-data" >
+            <label class="upload-btn">
+                <span style="color: rgb(142, 142, 233); font-weight: bold;">Change Photo</span>
+                <input type="file" name="avatar" hidden required onchange="previewAvatar(event)">
+            </label>
+            
+            <button type="submit" class="primary-btn">Save Photo</button>
+        </form>
+
+        <p class="bio">{{bio}}</p>
+
+    </div>
+
+    <!-- RIGHT SETTINGS -->
+    <div class="settings-card">
+
+        <!-- UPDATE PROFILE -->
+        <form method="POST" action="/update-profile">
+
+            <h3>Bio</h3>
+            <textarea name="bio">{{ bio }}</textarea>
+
+            <h3>Theme</h3>
+            <select name="theme" class="theme-select">
+                <option value="Default" {% if theme=="Default" %}selected{% endif %}>Default</option>
+                <option value="Dark" {% if theme=="Dark" %}selected{% endif %}>Dark</option>
+                <option value="Light" {% if theme=="Light" %}selected{% endif %}>Light</option>
+            </select>
+
+            <button class="primary-btn">Save Changes</button>
+
+        </form>
+
+        <!-- CHANGE PASSWORD -->
+        <div class="danger-section">
+
+            <h3>Change Password</h3>
+
+            <form method="POST" action="/change-password">
+
+                <input type="password" name="current_password" placeholder="Current Password" required>
+
+                <input type="password" name="new_password" placeholder="New Password" required>
+
+                <button class="secondary-btn">Update Password</button>
+
+            </form>
+
+        </div>
+
+        <!-- DELETE ACCOUNT -->
+        <div class="danger-section delete-box">
+
+            <h3>Delete Account</h3>
+
+            <details>
+                <summary>Delete My Account</summary>
+
+                <p>
+                    This will permanently delete your account and data.
+                    This action cannot be undone.
+                </p>
+
+                <form action="/delete-account" method="POST">
+                    <button class="danger-btn">
+                        Yes, Delete My Account
+                    </button>
+                </form>
+            </details>
+
+        </div>
+
+        <!-- LOGOUT -->
+        <a href="/logout" class="logout-link">Logout</a>
+
+    </div>
+
+</div>
+
+</body>
+</html>
