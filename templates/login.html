@@ -40,5 +40,68 @@
     <p>Don't have an account? <a href="/signup">Create one</a></p>
 </div>
 
+
+<!-- ================= ROBOT CREW (FLAT STYLE) ================= -->
+<div class="robot-crew">
+
+  <!-- Tall Purple -->
+  <div class="bot tall purple">
+    <div class="eyes">
+      <span class="eye"><span class="pupil"></span></span>
+      <span class="eye"><span class="pupil"></span></span>
+      <div class="tall-mouth"></div>
+    </div>
+  </div>
+
+  <!-- Tall Black -->
+  <div class="bot tall black">
+    <div class="eyes">
+      <span class="eye"><span class="pupil"></span></span>
+      <span class="eye"><span class="pupil"></span></span>
+    </div>
+  </div>
+
+  <!-- Yellow -->
+  <div class="bot mid yellow">
+    <div class="eyes">
+      <span class="eye"><span class="pupil"></span></span>
+      <span class="eye"><span class="pupil"></span></span>
+    </div>
+    <div class="mouth"></div>
+  </div>
+
+  <!-- Orange Blob -->
+  <div class="bot blob orange">
+    <div class="eyes">
+      <span class="eye"><span class="pupil"></span></span>
+      <span class="eye"><span class="pupil"></span></span>
+    </div>
+    <div class="mouth dot"></div>
+  </div>
+
+</div>
+
+
+<script>
+const pupils = document.querySelectorAll(".pupil");
+const passwordInput = document.querySelector("input[type='password']");
+
+document.addEventListener("mousemove", (e) => {
+
+    pupils.forEach(pupil => {
+        const eye = pupil.parentElement.getBoundingClientRect();
+        const cx = eye.left + eye.width/2;
+        const cy = eye.top + eye.height/2;
+
+        const angle = Math.atan2(e.clientY - cy, e.clientX - cx);
+        const max = 4;
+
+        pupil.style.transform =
+            `translate(${Math.cos(angle)*max}px, ${Math.sin(angle)*max}px)`;
+    });
+});
+</script>
+
+
 </body>
 </html>

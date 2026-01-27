@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, session
+from flask import Flask, render_template, request, redirect, session ,jsonify
 from auth.signup import signup_user
 from database.client import supabase
 
@@ -79,14 +79,12 @@ def dashboard():
     pfp = profile.data["profile_pic"]
 
     session["pfp"]=pfp
+    session['theme']=profile.data["theme"]
 
-    # return render_template(
-    # "dashboard.html",
-    # username=username,
-    # pfp=pfp,
-    # theme=profile.data["theme"],
-    # recent_chats=recent_chats,
-    # users=users)
+    supabase.table("user_profiles") \
+        .update({"status": True}) \
+        .eq("id", user_id) \
+        .execute()
 
     return render_template("dashboard.html",username=username,pfp=pfp,theme=profile.data["theme"])
 
@@ -107,18 +105,25 @@ def profile():
 
 @app.route("/logout")
 def logout():
+    supabase.table("user_profiles") \
+        .update({"status": False}) \
+        .eq("id", session['id']) \
+        .execute()
     session.clear()
     return redirect("/login")
 
 @app.route("/search", methods=["GET", "POST"])
 def search():
-    query = request.form["search"]
+    # query = request.form["search"]
+    query=request.args.get("q")
+
 
     users = supabase.table("users") \
-    .select("username") \
+    .select("*, user_profiles(profile_pic, bio)") \
     .ilike("username", f"%{query}%") \
     .execute()
-    return render_template("dashboard.html",users=users.data)
+
+    return jsonify(users.data)
 
 @app.route("/upload-avatar", methods=["POST"])
 def upload_avatar():
@@ -183,9 +188,23 @@ def update_profile():
 
     return redirect("/profile")
 
-@app.route("/chat/{{ user.username }}")
-def chat():
-    return("HEllo")
+@app.route("/chat/<username>")
+def chat(username):
+    user_id = supabase.table("users") \
+    .select("id") \
+    .eq("username", username) \
+    .execute()
+    user_id=user_id.data[0]['id']
+    
+    chat_user = supabase.table("user_profiles") \
+    .select("*") \
+    .eq("id", user_id) \
+    .execute()
+    print(chat_user.data)
+    user_pfp=chat_user.data[0]['profile_pic']
+    user_status=chat_user.data[0]['status']
+
+    return(render_template("chat.html",user_name=username,user_pfp=user_pfp,user_status=user_status,theme=session['theme']))
 
 
 if __name__ == "__main__":

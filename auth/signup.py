@@ -24,7 +24,7 @@ def signup_user(username, password, cpassword):
         "profile_pic": "https://qliexogopxzdabruzeqb.supabase.co/storage/v1/object/public/avatars/default/blank.png",
         "bio": "Hey there! I'm new 👋",
         "theme": "Default",
-        "show_online_status": True
+        "status": True
     }).execute()
 
     return "success"

@@ -1,314 +1,317 @@
-/* =========================
+/* ======================================================
+   STEGOSAFE — DASHBOARD FULL THEME + UI
+====================================================== */
+
+/* =====================
    THEME VARIABLES
-========================= */
+===================== */
 
 /* DEFAULT */
 body.default-theme {
-    --glass-bg: rgba(255,255,255,0.08);
+    --bg-main: #2a1f52;
+
+    --glass-light: rgba(255,255,255,0.08);
+    --glass-mid: rgba(255,255,255,0.12);
     --glass-border: rgba(255,255,255,0.18);
 
     --accent: #9b5cf0;
-    --accent-dark: #7442d7;
+    --accent-soft: #7442d7;
 
-    --text-main: #f9fafb;
-    --text-soft: #cbd5f5;
+    --text-main: white;
+    --text-muted: #c7b7ff;
 
-    --navbar-bg: rgba(20,20,30,0.65);
+    --danger: #f87171;
+
+    --navbar-bg: rgba(10,10,16,0.95);
+
+    --pfp-border: #9b5cf0;
 }
+body.default-theme .lock-icon {
+    filter: invert(100%);
+}
+
 
 /* DARK */
 body.dark-theme {
-    --glass-bg: rgba(255,255,255,0.05);
-    --glass-border: rgba(255,255,255,0.12);
+    --bg-main: #1a1a1b;
+
+    --glass-light: rgba(255,255,255,0.06);
+    --glass-mid: rgba(255,255,255,0.09);
+    --glass-border: rgba(255,255,255,0.14);
 
     --accent: #6c8cff;
-    --accent-dark: #4f66ff;
+    --accent-soft: #4f66ff;
 
-    --text-main: #f3f4ff;
-    --text-soft: #9aa2ff;
+    --text-main: #f4f6ff;
+    --text-muted: #a8b2ff;
 
-    --navbar-bg: rgba(10,12,20,0.92);
+    --danger: #ff6b6b;
+
+    --navbar-bg: rgba(10, 10, 15, 0.863);
+
+    --pfp-border: grey;
+
+}
+body.dark-theme .lock-icon {
+    filter: invert(100%);
 }
 
 /* LIGHT */
 body.light-theme {
-    --glass-bg: rgba(0,0,0,0.05);
-    --glass-border: rgba(0,0,0,0.15);
+    --bg-main: #d3cfcf;
+
+    --glass-light: rgba(0,0,0,0.03);
+    --glass-mid: rgba(0,0,0,0.06);
+    --glass-border: rgba(0,0,0,0.12);
 
     --accent: #6a4cff;
-    --accent-dark: #8a73ff;
+    --accent-soft: #8a73ff;
 
-    --text-main: #12121a;
-    --text-soft: #4b4b66;
+    --text-main: #1b1b22;
+    --text-muted: #5a55aa;
 
-    --navbar-bg: rgba(0,0,0,0.92);
+    --danger: #d93a3a;
+
+    --navbar-bg: rgba(230, 222, 222, 0.85);
+
+    --pfp-border: silver;
 }
 
-
-/* =========================
-   BASE LAYOUT
-========================= */
+/* =====================
+   BASE
+===================== */
 
 body {
-    margin: 0;
-    font-family: system-ui, -apple-system, sans-serif;
+    background: var(--bg-main);
+    color: var(--text-main);
 }
 
+a {
+    text-decoration: none;
+    color: inherit;
+}
 
-/* =========================
+/* =====================
    NAVBAR
-========================= */
+===================== */
 
 .navbar {
-    height: 72px;
-    padding: 0 28px;
+    background: var(--navbar-bg) !important;
 
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-
-    background: var(--navbar-bg);
-    backdrop-filter: blur(14px);
+    backdrop-filter: blur(18px);
 
     border-bottom: 1px solid var(--glass-border);
 
-    position: fixed;
+    position: sticky;
     top: 0;
-    width: 100%;
-    z-index: 999;
-}
-
-/* LEFT */
-.nav-left {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-.lock-icon {
-    width: 34px;
-    cursor: pointer;
-}
-
-.nav-left h1 {
-    font-size: 20px;
-    font-weight: 700;
-    cursor: pointer;
-}
-
-
-/* CENTER SEARCH */
-.nav-search {
-    position: relative;
-    width: 360px;
-}
-
-.nav-search input {
-    width: 100%;
-    padding: 11px 16px;
-
-    border-radius: 12px;
-
-    background: var(--glass-bg);
-    border: 1px solid var(--glass-border);
-
-    color: var(--text-main);
-
-    outline: none;
-}
-
-.nav-search input::placeholder {
-    color: var(--text-soft);
-}
-
-/* dropdown */
-.nav-search-results {
-    position: absolute;
-    top: calc(100% + 8px);
-    width: 100%;
-
-    background: var(--glass-bg);
-    backdrop-filter: blur(12px);
-
-    border-radius: 14px;
-    border: 1px solid var(--glass-border);
-
-    overflow: hidden;
-
     z-index: 1000;
 }
 
-.search-user {
-    padding: 12px 14px;
-    cursor: pointer;
-    transition: 0.2s;
-}
-
-.search-user:hover {
-    background: rgba(155,92,240,0.25);
-}
-
-
-/* RIGHT */
-.nav-right {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-}
-
-.pfp-small {
-    width: 42px;
-    height: 42px;
-
-    border-radius: 50%;
-    object-fit: cover;
-
-    border: 2px solid var(--glass-border);
-
-    cursor: pointer;
-}
-
-.account-link {
-    font-weight: 600;
+/* brand */
+.navbar-brand {
     cursor: pointer;
     color: var(--text-main);
 }
 
-
-/* =========================
-   DASHBOARD MAIN
-========================= */
-
-.dashboard-main {
-    margin-top: 95px;
-
-    display: grid;
-    grid-template-columns: 360px 1fr;
-
-    max-width: 1200px;
-    padding: 0 22px;
-    margin-left: auto;
-    margin-right: auto;
-
-    gap: 28px;
+.navbar-brand:hover{
+    color: var(--text-main);
 }
 
+/* =====================
+   SEARCH INPUT — THEME BASED
+===================== */
 
-/* =========================
-   CHAT LIST
-========================= */
+.navbar form input {
+    border-radius: 999px;
+    padding-left: 16px;
 
-.chat-list {
-    background: var(--glass-bg);
-    backdrop-filter: blur(12px);
+    transition:
+        background-color 0.18s ease,
+        border-color 0.18s ease,
+        box-shadow 0.18s ease,
+        color 0.18s ease;
+}
 
-    border-radius: 20px;
+/* ---------- DARK THEME ---------- */
+body.dark-theme .navbar form input {
+    background: #333;
+    color: white;
+    border: 1px solid #555;
+}
+
+body.dark-theme .navbar form input::placeholder {
+    color: #bbb;
+}
+
+body.dark-theme .navbar form input:focus {
+    background: #3a3a3a;
+    border-color: white;
+    box-shadow: 0 0 10px rgba(255,255,255,0.25);
+}
+
+/* ---------- DEFAULT THEME ---------- */
+body.default-theme .navbar form input {
+    background: var(--glass-mid);
+    color: white;
     border: 1px solid var(--glass-border);
-
-    padding: 22px;
-
-    height: calc(100vh - 130px);
-    overflow-y: auto;
 }
 
-.chat-list h3 {
-    margin-bottom: 16px;
+body.default-theme .navbar form input::placeholder {
+    color: var(--text-muted);
+}
+
+body.default-theme .navbar form input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 12px rgba(155,92,240,0.45);
+}
+
+/* ---------- LIGHT THEME ---------- */
+body.light-theme .navbar form input {
+    background: #d3cfcf;
+    color: black;
+    border: 1.8px solid black;
+}
+
+body.light-theme .navbar form input::placeholder {
+    color: #666;
+}
+
+body.light-theme .navbar form input:focus {
+    background: #d3cfcf;
+    border-color: black;
+    box-shadow: 0 0 10px rgba(0,0,0,0.25);
+}
+
+/* ---------- DARK THEME ---------- */
+body.dark-theme .search-button {
+    background: #444;
+    color: white;
+    border: none;
+}
+
+body.dark-theme .search-button:hover {
+    background: white;
+    color: black;
+    transform: translateY(-2px);
+}
+
+/* ---------- DEFAULT THEME ---------- */
+body.default-theme .search-button {
+    background: var(--accent);
+    color: white;
+    border: none;
+}
+
+body.default-theme .search-button:hover {
+    background: white;
+    color: var(--accent);
+    transform: translateY(-2px);
+}
+
+/* ---------- LIGHT THEME ---------- */
+body.light-theme .search-button {
+    background: #d3cfcf;
+    color: black;
+    border: 2px solid black;
+}
+
+body.light-theme .search-button:hover {
+    background: black;
+    color: #d3cfcf;
+    transform: translateY(-2px);
 }
 
 
-/* each chat */
-.chat-row {
-    display: flex;
-    align-items: center;
-    gap: 14px;
+/* =====================
+   PROFILE AREA
+===================== */
 
-    padding: 12px;
-    border-radius: 14px;
+.profile-area {
+    /* background: var(--glass-light); */
+    /* border: 1px solid var(--glass-border);  */
+
+    padding: 6px 12px;
+    border-radius: 999px;
 
     cursor: pointer;
     transition: 0.25s;
 }
 
-.chat-row:hover {
-    background: rgba(155,92,240,0.22);
+.profile-area:hover {
+    background: var(--glass-mid);
 }
 
-.chat-avatar {
-    width: 46px;
-    height: 46px;
-
-    border-radius: 50%;
-    object-fit: cover;
+.profile-area img {
+    border: 2px solid var(--pfp-border);
+    padding: 2px;
 }
 
-.chat-info {
+/* =====================
+   SEARCH USERS
+===================== */
+
+.search-user {
     display: flex;
-    flex-direction: column;
-}
-
-.chat-name {
-    font-weight: 600;
-}
-
-.chat-preview {
-    font-size: 13px;
-    opacity: 0.75;
-}
-
-
-/* =========================
-   PLACEHOLDER PANEL
-========================= */
-
-.dashboard-placeholder {
-    background: var(--glass-bg);
-    backdrop-filter: blur(12px);
-
-    border-radius: 20px;
-    border: 1px solid var(--glass-border);
-
-    padding: 28px;
-
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
     align-items: center;
+    gap: 14px;
 
-    text-align: center;
+    padding: 12px 16px;
+    border-radius: 14px;
+
+    transition: 0.18s ease;
 }
 
-.dashboard-placeholder h2 {
-    margin-bottom: 8px;
+.search-user:hover {
+    background: var(--glass-mid);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 26px rgba(0,0,0,0.35);
 }
 
-.dashboard-placeholder p {
-    color: var(--text-soft);
+.search-user img {
+    border: 2px solid var(--pfp-border);
+    padding: 2px;
+    border-radius: 50%;
 }
 
-
-/* =========================
-   LINKS
-========================= */
-
-.chat-link,
-.nav-search-results a {
-    text-decoration: none;
-    color: inherit;
-}
-
-
-/* =========================
+/* =====================
    MOBILE
-========================= */
+===================== */
 
-@media (max-width: 900px) {
-
-    .nav-search {
-        display: none;
+@media (max-width: 768px) {
+    .navbar form {
+        max-width: 260px !important;
     }
 
-    .dashboard-main {
-        grid-template-columns: 1fr;
+    .search-user h2 {
+        font-size: 1rem;
     }
+}
 
+/* =====================
+   Result Div
+===================== */
+
+.results-container {
+    height: 80vh;              /* takes most of screen */
+    overflow-y: auto;         /* vertical scroll inside */
+    border: 2px solid var(--glass-border);
+    background: var(--glass-light);
+}
+
+/* optional: nicer scrollbars */
+.results-container::-webkit-scrollbar {
+    width: 8px;
+}
+
+.results-container::-webkit-scrollbar-thumb {
+    background: rgba(0,0,0,0.25);
+    border-radius: 10px;
+}
+
+.section-title {
+    font-size: 0.95rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 12px;
 }

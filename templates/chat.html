@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Chat | StegoSafe</title>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='chat.css') }}">
+
+</head>
+
+<body class="{{ theme|lower }}-theme">
+
+<!-- ================= CHAT LAYOUT ================= -->
+
+<div class="chat-wrapper">
+
+    <!-- ---------- SIDEBAR ---------- -->
+    <aside class="chat-sidebar">
+
+        <div class="sidebar-header">
+            <h2>Chats</h2>
+        </div>
+
+        <div class="chat-list">
+
+            <!-- loop users -->
+            {% for u in recent_chats %}
+            <a href="/chat/{{ u.username }}" class="chat-user {% if u.username == active_user %}active{% endif %}">
+                <img src="{{ u.profile_pic }}">
+                <div>
+                    <span class="name">{{ u.username }}</span>
+                    <small>{{ u.last_message }}</small>
+                </div>
+            </a>
+            {% endfor %}
+
+        </div>
+
+    </aside>
+
+    <!-- ---------- MAIN CHAT ---------- -->
+    <main class="chat-main">
+
+        <!-- header -->
+        <div class="chat-header">
+
+            <div class="user-info">
+                <img src="{{ user_pfp }}">
+                <div>
+                    <h3 style="margin-bottom: 0px;margin-top: 0px;">{{ user_name }}</h3>
+                    <span class="status">
+                        {% if user_status==True%}
+                            <span style="color: #9cff9cd2;font-weight: bold;">Online</span>
+                        {% else %}
+                            <span style="color: rgb(250, 65, 65);font-weight: bold;">Offline</span>
+                        {% endif %}
+                    </span>
+                </div>
+            </div>
+
+            <a href="/dashboard" class="back-btn">Dashboard</a>
+
+        </div>
+
+        <!-- messages -->
+        <div class="chat-messages" id="chatMessages">
+
+            <!-- received -->
+            <div class="message received">
+                <p>Hello 👋</p>
+            </div>
+
+            <!-- sent -->
+            <div class="message sent">
+                <p>Hey! What's up?</p>
+            </div>
+
+        </div>
+
+        <!-- input -->
+        <form class="chat-input" method="POST">
+
+            <input
+                type="text"
+                name="message"
+                placeholder="Type your message..."
+                autocomplete="off"
+                required
+            >
+
+            <button type="submit">Send</button>
+
+        </form>
+
+    </main>
+
+</div>
+
+</body>
+</html>

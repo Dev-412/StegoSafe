@@ -1,117 +1,107 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<title>Dashboard | StegoSafe</title>
+<html>
+    <head>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
-<link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}">
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    </head>
+    <body class="{{ theme|lower }}-theme">
+        <nav class="navbar bg-body-tertiary px-3">
+        <div class="container-fluid d-flex align-items-center">
 
+            <!-- Brand / Left -->
+            <a class="navbar-brand fw-bold d-flex align-items-center gap-2" onclick="location.href='/dashboard'">
+                <img class="lock-icon"
+                src="https://cdn-icons-png.flaticon.com/512/3064/3064197.png" width="40" height="40">
+                <h1 class="mb-0 fs-4">StegoSafe</h1>
+            </a>
 
-<script>
-function toggleSearchResults(show) {
-    const box = document.getElementById("searchResults");
-    box.style.display = show ? "block" : "none";
-}
-</script>
-</head>
+            <!-- Center-Right Search -->
+            <form class="d-flex mx-auto" role="search" style="max-width: 300px; width: 100%;">
+                <input 
+                    class="form-control me-2" 
+                    type="search" 
+                    placeholder="Search" 
+                    name = 'search'
+                    id="searchbox"
+                />
+            </form>
 
-<body class="{{ theme|lower }}-theme">
+            <!-- Profile Section Right -->
+            <div class="d-flex align-items-center gap-2 profile-area" onclick="location.href='/profile'">
 
-<!-- ================= NAVBAR ================= -->
-<div class="navbar">
+                <span class="fw-semibold fs-4">{{username}}</span>
 
-    <!-- LEFT -->
-    <div class="nav-left">
-        <img class="lock-icon"
-             src="https://cdn-icons-png.flaticon.com/512/3064/3064197.png"
-             onclick="location.href='/dashboard'">
-        <h1>StegoSafe</h1>
-    </div>
+                <img 
+                    src="{{pfp}}" 
+                    alt="Profile"
+                    width="50"
+                    height="50"
+                    class="rounded-circle object-fit-cover"
+                />
 
-    <!-- CENTER SEARCH -->
-    <div class="nav-search">
-
-        <form action="/search" method="POST">
-            <input type="text"
-                   name="search"
-                   placeholder="Search users..."
-                   onfocus="toggleSearchResults(true)">
-        </form>
-
-        {% if users %}
-        <div class="nav-search-results" id="searchResults">
-            {% for user in users %}
-                {% if user.username != session["user"] %}
-                <a href="/chat/{{ user.username }}">
-                    <div class="search-user">
-                        👤 {{ user.username }}
-                    </div>
-                </a>
-                {% endif %}
-            {% endfor %}
+            </div>
         </div>
-        {% endif %}
+        </nav>
 
-    </div>
+        <div class="container mt-5">
 
-    <!-- RIGHT -->
-    <div class="nav-right">
-        <img class="pfp-small"
-             src="{{ pfp }}"
-             onclick="location.href='/profile'">
+            <div class="row justify-content-center">
 
-        <span class="account-link"
-              onclick="location.href='/profile'">
-              {{ username }}
-        </span>
-    </div>
-
-</div>
+                <div class="col-md-10">
+                    <h5 class="section-title">Chats</h5>
 
 
-<!-- ================= MAIN ================= -->
+                    <div class="rounded-4 shadow-sm p-4 results-container">
 
-<div class="dashboard-main">
-
-    <!-- LEFT COLUMN -->
-    <div class="chat-list">
-
-        <h3>Recent Chats</h3>
-
-        {% if recent_chats %}
-            {% for chat in recent_chats %}
-            <a href="/chat/{{ chat.username }}" class="chat-link">
-
-                <div class="chat-row">
-                    <img src="{{ chat.pfp }}" class="chat-avatar">
-
-                    <div class="chat-info">
-                        <span class="chat-name">{{ chat.username }}</span>
-                        <span class="chat-preview">{{ chat.last_msg }}</span>
+                        <div class="nav-search-results" id="searchResults">
+                                
+                        </div>
                     </div>
-
                 </div>
 
-            </a>
-            {% endfor %}
-        {% else %}
-            <p class="no-results">No recent chats.</p>
-        {% endif %}
+            </div>
 
-    </div>
+        </div>
+        <script>
+            document.getElementById('searchbox').addEventListener('input',function(){
+                let query=this.value;
 
-    <!-- RIGHT COLUMN -->
-    <div class="dashboard-placeholder">
-        <h2>Select a chat to start messaging</h2>
-        <p>Your conversations appear here.</p>
-    </div>
+                fetch(`/search?q=${query}`)
+                .then(res => res.json())
+                .then(data =>{
+                    let html=""
+                    data.forEach(users=>{
+                        html += `<a href="/chat/${ users.username }">
+                        <div class="search-user">
+                            <img src="${users.user_profiles.profile_pic}" width="50" height="50" class="rounded-circle object-fit-cover"> <h2>${ users.username }<span class="status-dot online"></span></h2>
+                        </div>
+                        </a>`;
+                    })
+                    document.getElementById("searchResults").innerHTML=html;
+                })
+            })
 
-</div>
+            if(document.getElementById('searchbox').value==""){
+                let query="";
 
-</body>
+                fetch(`/search?q=${query}`)
+                .then(res => res.json())
+                .then(data =>{
+                    let html=""
+                    data.forEach(users=>{
+                        html += `<a href="/chat/${ users.username }">
+                        <div class="search-user">
+                            <img src="${users.user_profiles.profile_pic}" width="50" height="50" class="rounded-circle object-fit-cover"> <h2>${ users.username }</h2>
+                        </div>
+                        </a>`;
+                    })
+                    document.getElementById("searchResults").innerHTML=html;
+                })
+            }
+            
+        </script>
+    </body>
 </html>

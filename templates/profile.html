@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <title>Profile | StegoSafe</title>
 
-<link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='profile.css') }}">
 
 <!-- Back icon link -->
@@ -59,7 +58,9 @@ function previewAvatar(event) {
 
         <form action="/upload-avatar" method="POST" enctype="multipart/form-data" >
             <label class="upload-btn">
-                <span style="color: rgb(142, 142, 233); font-weight: bold;">Change Photo</span>
+
+                <span style="color: rgb(223, 89, 89); font-weight: bold; cursor: pointer;">Change Photo</span>
+
                 <input type="file" name="avatar" hidden required onchange="previewAvatar(event)">
             </label>
             

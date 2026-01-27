@@ -1,4 +1,26 @@
 /* =====================
+   GLOBAL BASE (from styles.css)
+===================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Inter", "Segoe UI", sans-serif;
+}
+
+a {
+    text-decoration: none;
+}
+
+p {
+    margin-top: 15px;
+    font-size: 15px;
+    color: var(--text-muted);
+}
+
+
+/* =====================
    THEME VARIABLES
 ===================== */
 
@@ -46,7 +68,7 @@ body.dark-theme {
 
 /* LIGHT */
 body.light-theme {
-    --bg-main: #f3f2fb;
+    --bg-main: #d3cfcf;
 
     --glass-light: rgba(0,0,0,0.03);
     --glass-mid: rgba(0,0,0,0.06);
@@ -60,7 +82,7 @@ body.light-theme {
 
     --danger: #d93a3a;
 
-    --navbar-bg: rgba(255,255,255,0.85);
+    --navbar-bg: rgba(230, 222, 222, 0.85);
 
     --pfp-border: silver;
 }
@@ -72,6 +94,7 @@ body.light-theme {
 body {
     background: var(--bg-main);
     color: var(--text-main);
+    min-height: 100vh;
 }
 
 
@@ -96,6 +119,8 @@ body {
     padding: 0 40px;
     border-bottom: 1px solid var(--glass-border);
     z-index: 999;
+
+    
 }
 
 .nav-title {
@@ -105,15 +130,35 @@ body {
 
 /* right side link */
 .back-link {
-    font-size: 15px;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+
+    padding: 9px 16px;
+    border-radius: 999px;
+
+    background: var(--glass-light);
+    border: 1px solid var(--glass-border);
+
+    font-size: 14px;
     font-weight: 600;
     color: var(--text-muted);
-    text-decoration: none;
-    transition: 0.2s ease;
+
+    transition: all 0.22s ease;
+}
+
+.back-link i {
+    transition: transform 0.2s ease;
 }
 
 .back-link:hover {
-    opacity: 0.9;
+    color: var(--text-main);
+    background: var(--glass-mid);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+}
+
+.back-link:hover i {
+    transform: translateX(-4px);
 }
 
 
@@ -214,6 +259,7 @@ body {
     border-radius: 18px;
     border: 1px solid var(--glass-border);
     padding: 32px;
+    max-width: 640px;
 }
 
 .settings-card h3 {
@@ -240,7 +286,7 @@ body {
 .theme-select {
     padding: 12px 36px 12px 14px;
 
-    border: 1px solid var(--accent);
+    border: 1px solid var(--glass-light);
     cursor: pointer;
     outline: none;
 
@@ -281,3 +327,158 @@ body {
 .bio{
     color: var(--text-main);
 }
+
+/* =====================
+   PROFILE BUTTONS — THEME BASED
+===================== */
+
+.primary-btn,
+.secondary-btn,
+.danger-btn {
+    transition:
+        transform 0.18s ease,
+        background-color 0.18s ease,
+        color 0.18s ease,
+        border-color 0.18s ease,
+        box-shadow 0.18s ease;
+
+    font-weight: 600;
+}
+
+/* ---------- DARK THEME ---------- */
+body.dark-theme .primary-btn,
+body.dark-theme .secondary-btn {
+    background: #444;
+    color: white;
+    border: none;
+}
+
+body.dark-theme .primary-btn:hover,
+body.dark-theme .secondary-btn:hover {
+    background: white;
+    color: black;
+    transform: translateY(-2px);
+}
+
+/* danger stays red but still pops */
+body.dark-theme .danger-btn {
+    background: var(--danger);
+    color: white;
+}
+
+body.dark-theme .danger-btn:hover {
+    background: white;
+    color: var(--danger);
+    transform: translateY(-2px);
+}
+
+
+/* ---------- DEFAULT THEME ---------- */
+body.default-theme .primary-btn,
+body.default-theme .secondary-btn {
+    background: var(--accent);
+    color: white;
+    border: none;
+}
+
+body.default-theme .primary-btn:hover,
+body.default-theme .secondary-btn:hover {
+    background: white;
+    color: var(--accent);
+    transform: translateY(-2px);
+}
+
+body.default-theme .danger-btn {
+    background: var(--danger);
+    color: white;
+}
+
+body.default-theme .danger-btn:hover {
+    background: white;
+    color: var(--danger);
+    transform: translateY(-2px);
+}
+
+
+/* ---------- LIGHT THEME ---------- */
+body.light-theme .primary-btn,
+body.light-theme .secondary-btn {
+    background: #d3cfcf;
+    color: black;
+    border: 2px solid black;
+}
+
+body.light-theme .primary-btn:hover,
+body.light-theme .secondary-btn:hover {
+    background: black;
+    color: #d3cfcf;
+    transform: translateY(-2px);
+}
+
+body.light-theme .danger-btn {
+    background: #d3cfcf;
+    color: var(--danger);
+    border: 2px solid var(--danger);
+}
+
+body.light-theme .danger-btn:hover {
+    background: var(--danger);
+    color: white;
+    transform: translateY(-2px);
+}
+
+
+/* =====================
+   NAVBAR BACK BUTTON — THEME BASED
+===================== */
+
+.back-link {
+    transition:
+        transform 0.18s ease,
+        background-color 0.18s ease,
+        color 0.18s ease,
+        border-color 0.18s ease,
+        box-shadow 0.18s ease;
+
+    font-weight: 600;
+}
+
+/* ---------- DARK THEME ---------- */
+body.dark-theme .back-link {
+    background: #444;
+    color: white;
+    border: none;
+}
+
+body.dark-theme .back-link:hover {
+    background: white;
+    color: black;
+    transform: translateY(-2px);
+}
+
+/* ---------- DEFAULT THEME ---------- */
+body.default-theme .back-link {
+    background: var(--accent);
+    color: white;
+    border: none;
+}
+
+body.default-theme .back-link:hover {
+    background: white;
+    color: var(--accent);
+    transform: translateY(-2px);
+}
+
+/* ---------- LIGHT THEME ---------- */
+body.light-theme .back-link {
+    background: #d3cfcf;
+    color: black;
+    border: 2px solid black;
+}
+
+body.light-theme .back-link:hover {
+    background: black;
+    color: #d3cfcf;
+    transform: translateY(-2px);
+}
+
