@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, session ,jsonify
 from auth.signup import signup_user
 from database.client import supabase
+from datetime import *
 
 app = Flask(__name__)
 app.secret_key = "STEGOSAFE_SECRET"  
@@ -114,13 +115,13 @@ def logout():
 
 @app.route("/search", methods=["GET", "POST"])
 def search():
-    # query = request.form["search"]
     query=request.args.get("q")
 
 
     users = supabase.table("users") \
     .select("*, user_profiles(profile_pic, bio)") \
     .ilike("username", f"%{query}%") \
+    .neq("username", session['user']) \
     .execute()
 
     return jsonify(users.data)
@@ -205,6 +206,44 @@ def chat(username):
     user_status=chat_user.data[0]['status']
 
     return(render_template("chat.html",user_name=username,user_pfp=user_pfp,user_status=user_status,theme=session['theme']))
+
+@app.route("/send_message",methods=["GET"])
+def SendMessage():
+    msg = request.args.get("msg")
+    receiver = request.args.get("receiver")
+
+    supabase.table("messages").insert({
+    "sender": session["user"],
+    "receiver": receiver,
+    "image_url": msg
+    }).execute()
+
+    # me = session["user"]
+    # messages = supabase.table("messages") \
+    # .select("*") \
+    # .or_(
+    #     f"and(sender.eq.{me},receiver.eq.{receiver}),"
+    #     f"and(sender.eq.{receiver},receiver.eq.{me})"
+    # ) \
+    # .order("time", desc=False) \
+    # .execute()
+    # messages=messages.data
+    return jsonify({"status":"ok"})
+
+@app.route('/get_messages')
+def getMessages():
+    receiver = request.args.get("receiver")
+    me = session["user"]
+    messages = supabase.table("messages") \
+    .select("*") \
+    .or_(
+        f"and(sender.eq.{me},receiver.eq.{receiver}),"
+        f"and(sender.eq.{receiver},receiver.eq.{me})"
+    ) \
+    .order("time", desc=False) \
+    .execute()
+    messages=messages.data
+    return jsonify(messages)
 
 
 if __name__ == "__main__":

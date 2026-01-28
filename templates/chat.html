@@ -6,6 +6,13 @@
 
 <link rel="stylesheet" href="{{ url_for('static', filename='chat.css') }}">
 
+<script>
+    const user_name = {{ user_name | tojson }};
+</script>
+
+<script src="{{ url_for('static', filename='chat.js') }}"></script>
+
+
 </head>
 
 <body class="{{ theme|lower }}-theme">
@@ -21,9 +28,9 @@
             <h2>Chats</h2>
         </div>
 
-        <div class="chat-list">
+        <!-- <div class="chat-list">
 
-            <!-- loop users -->
+            loop users
             {% for u in recent_chats %}
             <a href="/chat/{{ u.username }}" class="chat-user {% if u.username == active_user %}active{% endif %}">
                 <img src="{{ u.profile_pic }}">
@@ -34,7 +41,7 @@
             </a>
             {% endfor %}
 
-        </div>
+        </div> -->
 
     </aside>
 
@@ -62,39 +69,38 @@
 
         </div>
 
-        <!-- messages -->
+        
         <div class="chat-messages" id="chatMessages">
 
-            <!-- received -->
-            <div class="message received">
+            
+            <!-- <div class="message received">
                 <p>Hello 👋</p>
             </div>
 
-            <!-- sent -->
+            
             <div class="message sent">
                 <p>Hey! What's up?</p>
-            </div>
+            </div> -->
 
         </div>
 
-        <!-- input -->
-        <form class="chat-input" method="POST">
+        
+        <form class="chat-input">
 
             <input
                 type="text"
-                name="message"
                 placeholder="Type your message..."
                 autocomplete="off"
                 required
+                id="message"
             >
 
-            <button type="submit">Send</button>
+            <button type="submit" onclick="send(event)">Send</button>
 
         </form>
 
     </main>
 
 </div>
-
 </body>
 </html>

@@ -11,6 +11,14 @@
         <nav class="navbar bg-body-tertiary px-3">
         <div class="container-fluid d-flex align-items-center">
 
+            <button class="btn search-button me-2"
+                type="button"
+                data-bs-toggle="offcanvas"
+                data-bs-target="#chatDrawer">
+                ☰ Chats
+            </button>
+
+
             <!-- Brand / Left -->
             <a class="navbar-brand fw-bold d-flex align-items-center gap-2" onclick="location.href='/dashboard'">
                 <img class="lock-icon"
@@ -46,15 +54,37 @@
         </div>
         </nav>
 
+        <div class="offcanvas offcanvas-start glass-offcanvas" tabindex="-1" id="chatDrawer">
+            <div class="offcanvas-header">
+                <h5 class="offcanvas-title">Recent Chats</h5>
+                <button type="button"class="btn-close"data-bs-dismiss="offcanvas"></button>
+            </div>
+        <div class="offcanvas-body">
+
+        <input class="form-control mb-3"
+               placeholder="Search chats..."
+               id="drawerSearch">
+
+        <div id="recentChats" class="nav-search-results"></div>
+
+    </div>
+
+</div>
+
+
         <div class="container mt-5">
 
             <div class="row justify-content-center">
 
-                <div class="col-md-10">
-                    <h5 class="section-title">Chats</h5>
+                <div class="col-md-10 mx-auto">
+                    <h5 class="section-title">Users</h5>
 
 
                     <div class="rounded-4 shadow-sm p-4 results-container">
+                        <div id="emptyState" class="empty-state">
+                            🔍 Start typing to find users…
+                        </div>
+
 
                         <div class="nav-search-results" id="searchResults">
                                 
@@ -69,6 +99,8 @@
             document.getElementById('searchbox').addEventListener('input',function(){
                 let query=this.value;
 
+                document.getElementById("searchResults").innerHTML =`<div class="empty-state">Searching...</div>`;
+
                 fetch(`/search?q=${query}`)
                 .then(res => res.json())
                 .then(data =>{
@@ -81,26 +113,10 @@
                         </a>`;
                     })
                     document.getElementById("searchResults").innerHTML=html;
+
+                    document.getElementById("emptyState").style.display = html === "" ? "block" : "none";
                 })
             })
-
-            if(document.getElementById('searchbox').value==""){
-                let query="";
-
-                fetch(`/search?q=${query}`)
-                .then(res => res.json())
-                .then(data =>{
-                    let html=""
-                    data.forEach(users=>{
-                        html += `<a href="/chat/${ users.username }">
-                        <div class="search-user">
-                            <img src="${users.user_profiles.profile_pic}" width="50" height="50" class="rounded-circle object-fit-cover"> <h2>${ users.username }</h2>
-                        </div>
-                        </a>`;
-                    })
-                    document.getElementById("searchResults").innerHTML=html;
-                })
-            }
             
         </script>
     </body>

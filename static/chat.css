@@ -280,6 +280,7 @@ body.light-theme .back-btn:hover {
 
     background: var(--chat-glass);
     border-top: 1px solid var(--chat-border);
+    
 }
 
 .chat-input input {
@@ -296,7 +297,7 @@ body.light-theme .back-btn:hover {
 }
 
 .chat-input input::placeholder {
-    color: var(--chat-muted);
+    color: var(--chat-text);
 }
 
 /* send button */

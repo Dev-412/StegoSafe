@@ -298,20 +298,104 @@ body.light-theme .search-button:hover {
     background: var(--glass-light);
 }
 
-/* optional: nicer scrollbars */
-.results-container::-webkit-scrollbar {
-    width: 8px;
+/* =====================
+   SIMPLE MODERN SCROLLBAR
+===================== */
+
+.results-container::-webkit-scrollbar,
+.nav-search-results::-webkit-scrollbar,
+.chat-messages::-webkit-scrollbar {
+    width: 14px;          /* clearly thicker */
 }
 
-.results-container::-webkit-scrollbar-thumb {
-    background: rgba(0,0,0,0.25);
-    border-radius: 10px;
+.results-container::-webkit-scrollbar-track,
+.nav-search-results::-webkit-scrollbar-track,
+.chat-messages::-webkit-scrollbar-track {
+    background: rgba(0,0,0,0.15);
 }
+
+.results-container::-webkit-scrollbar-thumb,
+.nav-search-results::-webkit-scrollbar-thumb,
+.chat-messages::-webkit-scrollbar-thumb {
+    background: var(--glass-border);
+    border-radius: 10px;   /* almost square */
+}
+
+.results-container::-webkit-scrollbar-thumb:hover,
+.nav-search-results::-webkit-scrollbar-thumb:hover,
+.chat-messages::-webkit-scrollbar-thumb:hover {
+    background: var(--accent-soft);
+}
+
 
 .section-title {
     font-size: 0.95rem;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: var(--text-muted);
+    color: var(--text-main);
     margin-bottom: 12px;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 40px 12px;
+    color: var(--text-main);
+    opacity: 0.85;
+}
+
+.status-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-left: 6px;
+}
+
+.status-dot.online {
+    background: #22c55e;
+    box-shadow: 0 0 8px rgba(34,197,94,0.7);
+}
+
+.status-dot.offline {
+    background: #9ca3af;
+}
+
+
+.glass-offcanvas {
+    background: var(--navbar-bg);
+    color: var(--text-main);
+    backdrop-filter: blur(18px);
+    border-right: 1px solid var(--glass-border);
+}
+
+.glass-offcanvas .offcanvas-header {
+    border-bottom: 1px solid var(--glass-border);
+}
+
+.glass-offcanvas .form-control {
+    background: var(--glass-mid);
+    border: 1px solid var(--glass-border);
+    color: var(--text-main);
+}
+
+.glass-offcanvas .form-control::placeholder {
+    color: var(--text-muted);
+}
+
+.glass-offcanvas .form-control:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 10px rgba(155,92,240,0.45);
+}
+
+.glass-offcanvas .btn-close {
+    filter: invert(100%);
+}
+
+:root {
+    --navbar-height: 78px;
+}
+
+.offcanvas-start.glass-offcanvas {
+    top: var(--navbar-height);
+    height: calc(100vh - var(--navbar-height));
 }
