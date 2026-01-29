@@ -234,14 +234,31 @@ def SendMessage():
 def getMessages():
     receiver = request.args.get("receiver")
     me = session["user"]
-    messages = supabase.table("messages") \
-    .select("*") \
-    .or_(
-        f"and(sender.eq.{me},receiver.eq.{receiver}),"
-        f"and(sender.eq.{receiver},receiver.eq.{me})"
-    ) \
-    .order("time", desc=False) \
-    .execute()
+    timestamp = request.args.get("timestamp")
+    
+
+
+    if timestamp and timestamp!="null":
+        messages = supabase.table("messages") \
+        .select("*") \
+        .or_(
+            f"and(sender.eq.{me},receiver.eq.{receiver}),"
+            f"and(sender.eq.{receiver},receiver.eq.{me})"
+        ) \
+        .order("time", desc=False) \
+        .gt("time", timestamp) \
+        .execute()
+    else:
+        messages = supabase.table("messages") \
+        .select("*") \
+        .or_(
+            f"and(sender.eq.{me},receiver.eq.{receiver}),"
+            f"and(sender.eq.{receiver},receiver.eq.{me})"
+        ) \
+        .order("time", desc=False) \
+        .execute()
+
+    print(messages.data )
     messages=messages.data
     return jsonify(messages)
 

@@ -1,5 +1,5 @@
 let timestamp = null
-
+let html = "";
 
     //runs when u send msg
     function send(event){
@@ -9,13 +9,11 @@ let timestamp = null
         else{
             event.preventDefault();
             let msg =document.getElementById("message").value
-            console.log(msg)
             
             fetch(`/send_message?msg=${msg}&receiver=${user_name}`)
-            .then(() => fetchMessages());
+            // .then(() => fetchMessages());
             document.getElementById("message").value = "";
-            // auto scroll bottom
-            document.getElementById("chatMessages").scrollTop = document.getElementById("chatMessages").scrollHeight;
+            
         }
     }
 
@@ -23,31 +21,35 @@ let timestamp = null
     //fetches every msg every 2 sec
     function fetchMessages() {
 
-    fetch(`/get_messages?receiver=${(user_name)}`)
+    fetch(`/get_messages?receiver=${(user_name)}&timestamp=${timestamp}`)
         .then(res => res.json())
         .then(data => renderMessages(data));
     }
 
     function renderMessages(data) {
-
-    let html = "";
-
-    data.forEach(messages=>{
-        if(messages['receiver']==user_name){
-            html+=`<div class="message sent">
+        let new_chat=false
+        data.forEach(messages=>{
+            if(messages['receiver']==user_name){
+                html+=`<div class="message sent">
                     <p>${messages['image_url']}</p>
                     </div>`
+                new_chat=true
             }
-        else{
+            else{
                 html+=`<div class="message received">
                     <p>${messages['image_url']}</p>
-                </div>`
-        }
-    })
+                    </div>`
+                new_chat=true
+            }
+            timestamp=messages['time']
+        })
 
     const box = document.getElementById("chatMessages");
 
     box.innerHTML = html;
 
-    
+    if(new_chat==true){
+        // auto scroll bottom
+        document.getElementById("chatMessages").scrollTop = document.getElementById("chatMessages").scrollHeight;
+    } 
 }
