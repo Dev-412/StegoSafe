@@ -211,11 +211,13 @@ def chat(username):
 def SendMessage():
     msg = request.args.get("msg")
     receiver = request.args.get("receiver")
+    lastView=request.args.get('lastView')
 
     supabase.table("messages").insert({
     "sender": session["user"],
     "receiver": receiver,
-    "image_url": msg
+    "image_url": msg,
+    "lastView":lastView
     }).execute()
 
     # me = session["user"]
@@ -261,6 +263,46 @@ def getMessages():
     print(messages.data )
     messages=messages.data
     return jsonify(messages)
+
+@app.route('/recent_chats')
+def RecentChats():
+    me = session["user"]
+    recentchats = supabase.table('messages')\
+    .select("*") \
+    .or_(
+        f"and(sender.eq.{me}),"
+        f"and(receiver.eq.{me})"
+    ) \
+    .order("time", desc=False) \
+    .execute()
+    print(recentchats.data)
+    chats=[]
+    for i in recentchats.data:
+        if(i['sender'] in chats):
+            chats.remove(i['sender'])
+            chats.insert(0,i['sender'])
+        elif(i['receiver'] in chats):
+            chats.remove(i['receiver'])
+            chats.insert(0,i['receiver'])
+        else:
+            if(i['sender']==session['user']):
+                chats.insert(0,i['receiver'])
+            else:
+                chats.insert(0,i['sender'])
+    print(chats)
+    return jsonify(chats)
+
+@app.route('/fetch_profile')
+def fetchProfile():
+    name = request.args.get("name")
+    users = supabase.table("users") \
+    .select("user_profiles(profile_pic)") \
+    .eq("username",name)\
+    .single()\
+    .execute()
+    print(users.data)
+    pfp = users.data['user_profiles']
+    return jsonify(pfp['profile_pic'])
 
 
 if __name__ == "__main__":

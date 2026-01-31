@@ -1,4 +1,5 @@
 let timestamp = null
+let lastView = null
 let html = "";
 
     //runs when u send msg
@@ -9,8 +10,9 @@ let html = "";
         else{
             event.preventDefault();
             let msg =document.getElementById("message").value
+            lastView = new Date().toISOString();
             
-            fetch(`/send_message?msg=${msg}&receiver=${user_name}`)
+            fetch(`/send_message?msg=${msg}&receiver=${user_name}&lastView=${lastView}`)
             // .then(() => fetchMessages());
             document.getElementById("message").value = "";
             
@@ -29,7 +31,7 @@ let html = "";
     function renderMessages(data) {
         let new_chat=false
         data.forEach(messages=>{
-            if(messages['receiver']==user_name){
+            if(messages['receiver']==user_name){ //receiver = person we are chatting to
                 html+=`<div class="message sent">
                     <p>${messages['image_url']}</p>
                     </div>`

@@ -338,7 +338,8 @@ body.light-theme .search-button:hover {
 
 .empty-state {
     text-align: center;
-    padding: 40px 12px;
+    font-weight: bold;
+    /* padding: 40px 12px; */
     color: var(--text-main);
     opacity: 0.85;
 }

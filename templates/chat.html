@@ -7,7 +7,7 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='chat.css') }}">
 
 <script>
-    const user_name = {{ user_name | tojson }};
+    const user_name = {{ user_name | tojson }}; //the person we are chatting to
 </script>
 
 <script src="{{ url_for('static', filename='chat.js') }}"></script>
