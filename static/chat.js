@@ -1,5 +1,4 @@
 let timestamp = null
-let lastView = null
 let html = "";
 
     //runs when u send msg
@@ -12,7 +11,7 @@ let html = "";
             let msg =document.getElementById("message").value
             lastView = new Date().toISOString();
             
-            fetch(`/send_message?msg=${msg}&receiver=${user_name}&lastView=${lastView}`)
+            fetch(`/send_message?msg=${msg}&receiver=${user_name}`)
             // .then(() => fetchMessages());
             document.getElementById("message").value = "";
             
@@ -28,7 +27,7 @@ let html = "";
         .then(data => renderMessages(data));
     }
 
-    function renderMessages(data) {
+    function renderMessages(data) { 
         let new_chat=false
         data.forEach(messages=>{
             if(messages['receiver']==user_name){ //receiver = person we are chatting to
@@ -54,4 +53,39 @@ let html = "";
         // auto scroll bottom
         document.getElementById("chatMessages").scrollTop = document.getElementById("chatMessages").scrollHeight;
     } 
-}
+    }
+
+
+// setInterval(RecentChats, 2000);
+// function RecentChats() {
+//     fetch('/recent_chats')
+//         .then(res => res.json())
+//         .then(users => {
+
+//             const requests = users.map(user =>
+//                 fetch(`/fetch_profile?name=${user}`)
+//                     .then(res => res.json())
+//                     .then(pic => {
+
+//                         return `
+//                             <a href="/chat/${user}">
+//                                 <div class="search-user">
+//                                     <img src="${pic}"
+//                                          width="50"
+//                                          height="50"
+//                                          class="rounded-circle object-fit-cover">
+//                                     <h2>${user}
+//                                         <span class="status-dot online"></span>
+//                                     </h2>
+//                                 </div>
+//                             </a>
+//                         `;
+//                     })
+//             );
+
+//             return Promise.all(requests);
+//         })
+//         .then(cards => {
+//             document.getElementById("chatlist").innerHTML =cards.join("");
+//         });
+// }

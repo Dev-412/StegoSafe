@@ -25,23 +25,12 @@
     <aside class="chat-sidebar">
 
         <div class="sidebar-header">
-            <h2>Chats</h2>
+            <h2>Recent Chats</h2>
         </div>
 
-        <!-- <div class="chat-list">
+        <div class="chat-list" id="chatlist">
 
-            loop users
-            {% for u in recent_chats %}
-            <a href="/chat/{{ u.username }}" class="chat-user {% if u.username == active_user %}active{% endif %}">
-                <img src="{{ u.profile_pic }}">
-                <div>
-                    <span class="name">{{ u.username }}</span>
-                    <small>{{ u.last_message }}</small>
-                </div>
-            </a>
-            {% endfor %}
-
-        </div> -->
+        </div>
 
     </aside>
 
@@ -72,15 +61,6 @@
         
         <div class="chat-messages" id="chatMessages">
 
-            
-            <!-- <div class="message received">
-                <p>Hello 👋</p>
-            </div>
-
-            
-            <div class="message sent">
-                <p>Hey! What's up?</p>
-            </div> -->
 
         </div>
 

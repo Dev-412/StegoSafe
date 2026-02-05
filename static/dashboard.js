@@ -1,11 +1,31 @@
+let recentTimer = null;
+
+function startRecentPolling() {
+
+    if (recentTimer) return; // already running
+
+    RecentChats();
+
+    recentTimer = setInterval(RecentChats, 2000);
+}
+
+function stopRecentPolling() {
+    if (recentTimer) {
+        clearInterval(recentTimer);
+        recentTimer = null;
+    }
+}
+
+startRecentPolling();
+
 document.getElementById('searchbox').addEventListener('input',function(){
     const query = this.value.trim();
 
     if (!query) {
-        RecentChats()
+        startRecentPolling();
         return;
     }
-
+    stopRecentPolling();
     SearchResult(query);
 })
 

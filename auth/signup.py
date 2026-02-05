@@ -1,12 +1,14 @@
 from database.client import supabase
-def signup_user(username, password, cpassword):
+from auth.RSA import *
+def signup_user(username, password):
 
+    pub, priv = generate_keys()
     # Insert into Supabase
     supabase.table("users").insert({
         "username": username,
         "password": password,  #hash password
-        "public_key":0,
-        "private_key":0
+        "public_key":pub,
+        "private_key":priv
     }).execute()
 
     # fetch id

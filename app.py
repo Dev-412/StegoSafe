@@ -1,7 +1,9 @@
 from flask import Flask, render_template, request, redirect, session ,jsonify
 from auth.signup import signup_user
+from auth.RSA import *
 from database.client import supabase
 from datetime import *
+import json
 
 app = Flask(__name__)
 app.secret_key = "STEGOSAFE_SECRET"  
@@ -31,7 +33,7 @@ def signup():
         elif( len(password)<8):
             return render_template("signup.html", error="Password Should be of 8 Digits or Greater..")
         else:
-            signup_user(username, password, cpassword)
+            signup_user(username, password)
             session["user"] = username
             return redirect("/dashboard")
         
@@ -211,25 +213,26 @@ def chat(username):
 def SendMessage():
     msg = request.args.get("msg")
     receiver = request.args.get("receiver")
-    lastView=request.args.get('lastView')
+
+    public_key = supabase.table("users") \
+    .select("public_key") \
+    .eq("username", receiver) \
+    .single() \
+    .execute()
+
+    public_key = public_key.data['public_key']
+    public_key = json.loads(public_key)
+    print(public_key)
+
+    cipher = encrypt(msg,public_key)
+
+    payload = ",".join(map(str, cipher))
 
     supabase.table("messages").insert({
     "sender": session["user"],
     "receiver": receiver,
-    "image_url": msg,
-    "lastView":lastView
+    "image_url": payload,
     }).execute()
-
-    # me = session["user"]
-    # messages = supabase.table("messages") \
-    # .select("*") \
-    # .or_(
-    #     f"and(sender.eq.{me},receiver.eq.{receiver}),"
-    #     f"and(sender.eq.{receiver},receiver.eq.{me})"
-    # ) \
-    # .order("time", desc=False) \
-    # .execute()
-    # messages=messages.data
     return jsonify({"status":"ok"})
 
 @app.route('/get_messages')
@@ -259,10 +262,39 @@ def getMessages():
         ) \
         .order("time", desc=False) \
         .execute()
-
     print(messages.data )
     messages=messages.data
+
+    my_priv = supabase.table("users") \
+    .select("private_key") \
+    .eq("username", session['user']) \
+    .single() \
+    .execute()
+
+    receiver_priv = supabase.table("users") \
+    .select("private_key") \
+    .eq("username", receiver) \
+    .single() \
+    .execute()
+
+    my_priv=my_priv.data["private_key"]
+    my_priv=json.loads(my_priv)
+    receiver_priv=receiver_priv.data["private_key"]
+    receiver_priv=json.loads(receiver_priv)
+
+    for i in messages:
+        print(i)
+        temp = i['image_url']
+        cipher = list(map(int, temp.split(",")))
+        if(i['sender']==session['user']):
+            msg = decrypt(cipher, receiver_priv)
+        else:
+            msg = decrypt(cipher, my_priv)
+
+        i['image_url']=msg
     return jsonify(messages)
+
+# [{'id': '6b5ad12d-aae8-4f5e-ae43-1520c740ee21', 'sender': 'd1', 'receiver': 'dev', 'image_url': '3352228,4763535,5497629', 'time': '2026-02-03T13:47:25.385175'}, {'id': '507f231a-5098-4884-a1cf-d4261ced84c0', 'sender': 'd1', 'receiver': 'dev', 'image_url': '4763535,5497629', 'time': '2026-02-03T13:47:44.464134'}]
 
 @app.route('/recent_chats')
 def RecentChats():
