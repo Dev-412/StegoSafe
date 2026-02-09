@@ -1,3 +1,5 @@
+let revealed = new Set();
+
 let timestamp = null
 let html = "";
 
@@ -28,64 +30,61 @@ let html = "";
     }
 
     function renderMessages(data) { 
-        let new_chat=false
-        data.forEach(messages=>{
-            if(messages['receiver']==user_name){ //receiver = person we are chatting to
-                html+=`<div class="message sent">
-                    <p>${messages['image_url']}</p>
-                    </div>`
-                new_chat=true
-            }
-            else{
-                html+=`<div class="message received">
-                    <p>${messages['image_url']}</p>
-                    </div>`
-                new_chat=true
-            }
-            timestamp=messages['time']
-        })
+
+    if(data.length === 0) return;
 
     const box = document.getElementById("chatMessages");
 
-    box.innerHTML = html;
+    data.forEach(messages => {
 
-    if(new_chat==true){
-        // auto scroll bottom
-        document.getElementById("chatMessages").scrollTop = document.getElementById("chatMessages").scrollHeight;
-    } 
-    }
+        let wrapper = document.createElement("div");
+        wrapper.className = messages.receiver == user_name
+            ? "message sent"
+            : "message received";
+            
+        wrapper.id = "msg-" + messages.id;
+
+        wrapper.innerHTML = `
+            <div class="stego-box" id="box-${messages.id}">
+                <img src="${messages.image_url}" class="chat-image">
+                <button class="reveal-btn"
+                    onclick="revealMsg('${messages.id}')">Reveal</button>
+            </div>
+            <div class="revealed-text" id="txt-${messages.id}" style="display:none;"></div>
+        `;
+
+        box.appendChild(wrapper);
+
+        timestamp = messages.time;
+    });
+
+    box.scrollTop = box.scrollHeight;
+}
+
+    
+function revealMsg(id){
+
+    fetch(`/reveal_message?id=${id}`)
+      .then(res => res.json())
+      .then(data => {
+
+          if(!data.text){
+              alert("Failed to reveal");
+              return;
+          }
+
+          // remember revealed
+          revealed.add(id);
+
+          // hide image box
+          document.getElementById("box-"+id).style.display = "none";
+
+          // show text
+          const txt = document.getElementById("txt-"+id);
+          txt.style.display = "block";
+          txt.innerText = data.text;
+      });
+}
 
 
-// setInterval(RecentChats, 2000);
-// function RecentChats() {
-//     fetch('/recent_chats')
-//         .then(res => res.json())
-//         .then(users => {
 
-//             const requests = users.map(user =>
-//                 fetch(`/fetch_profile?name=${user}`)
-//                     .then(res => res.json())
-//                     .then(pic => {
-
-//                         return `
-//                             <a href="/chat/${user}">
-//                                 <div class="search-user">
-//                                     <img src="${pic}"
-//                                          width="50"
-//                                          height="50"
-//                                          class="rounded-circle object-fit-cover">
-//                                     <h2>${user}
-//                                         <span class="status-dot online"></span>
-//                                     </h2>
-//                                 </div>
-//                             </a>
-//                         `;
-//                     })
-//             );
-
-//             return Promise.all(requests);
-//         })
-//         .then(cards => {
-//             document.getElementById("chatlist").innerHTML =cards.join("");
-//         });
-// }

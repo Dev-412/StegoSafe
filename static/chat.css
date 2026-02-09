@@ -412,3 +412,23 @@ body.light-theme .chat-input button:hover {
 } */
 
 
+.chat-image{
+    max-width: 300px;
+    border-radius: 12px;
+    display: block;
+}
+
+
+
+.reveal-btn{
+    margin-top: 6px;
+    padding: 4px 10px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.revealed-text{
+    margin-top: 4px;
+    font-size: 14px;
+    opacity: 0.9;
+}

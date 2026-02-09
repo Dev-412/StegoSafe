@@ -97,34 +97,21 @@ def encrypt(message, public_key):
 
     return cipher
 
-
 def decrypt(cipher, private_key):
 
     d, n = private_key
 
-    data = bytearray()
+    result = ""
 
     for c in cipher:
         m = mod_exp(c, d, n)
-        data.append(m)
 
-    return data.decode()
+        # ensure valid ascii
+        if m < 0 or m > 255:
+            raise Exception(f"Invalid decrypted byte: {m}")
 
+        result += chr(m)
 
-# pub, priv = generate_keys()
-# print("public: ",pub)
-# print("private: ",priv)
-
-# cipher = encrypt("hello my name is dev",pub)
-
-# print("cipher: ",cipher)
-
-# payload = ",".join(map(str, cipher))
-
-# print("payload: ",payload)
+    return result
 
 
-# cipher = list(map(int, payload.split(",")))
-
-# msg = decrypt(cipher, priv)
-# print(msg)

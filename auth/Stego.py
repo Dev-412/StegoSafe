@@ -1,11 +1,12 @@
+import requests
+from io import BytesIO
 from PIL import Image
 import numpy as np
 
 DELIM = "#####"
 
-def hide_text(img_path, text, out_path):
+def hide_text_in_image(img, text):
 
-    img = Image.open(img_path).convert("RGB")
     arr = np.array(img)
 
     binary = ''.join(format(ord(c), '08b') for c in text)
@@ -14,21 +15,23 @@ def hide_text(img_path, text, out_path):
     flat = arr.flatten()
 
     if len(binary) > len(flat):
-        raise Exception("Message too large for this image")
+        raise Exception("Too much data for this image")
 
     for i in range(len(binary)):
-        flat[i] = (flat[i] & ~1) | int(binary[i])
+        flat[i] = (flat[i] & 254) | int(binary[i])
+
 
     encoded = flat.reshape(arr.shape)
 
-    Image.fromarray(encoded).save(out_path)
-
-    return out_path
+    return Image.fromarray(encoded)
 
 
-def reveal_text(img_path):
 
-    img = Image.open(img_path)
+def reveal_text_from_url(url):
+
+    r = requests.get(url, timeout=10)
+    img = Image.open(BytesIO(r.content)).convert("RGB")
+
     arr = np.array(img).flatten()
 
     bits = []

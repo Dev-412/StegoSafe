@@ -4,6 +4,10 @@ from auth.RSA import *
 from database.client import supabase
 from datetime import *
 import json
+from auth.carrier import get_random_image
+from auth.Stego import hide_text_in_image
+from io import BytesIO
+import uuid
 
 app = Flask(__name__)
 app.secret_key = "STEGOSAFE_SECRET"  
@@ -227,12 +231,38 @@ def SendMessage():
     cipher = encrypt(msg,public_key)
 
     payload = ",".join(map(str, cipher))
+    
 
+    # 1️⃣ random carrier
+    carrier = get_random_image(400, 400)
+
+    # 2️⃣ hide cipher
+    stego_img = hide_text_in_image(carrier, payload)
+
+    # 3️⃣ convert to bytes
+    buf = BytesIO()
+    stego_img.save(buf, format="PNG")
+    buf.seek(0)
+
+    filename = f"{uuid.uuid4()}.png"
+
+    # 4️⃣ upload to bucket
+    supabase.storage.from_("stego-images").upload(
+        filename,
+        buf.getvalue(),
+        {"content-type": "image/png"}
+    )
+
+    # 5️⃣ get public URL
+    url = supabase.storage.from_("stego-images").get_public_url(filename)
+
+    # 6️⃣ store in DB
     supabase.table("messages").insert({
-    "sender": session["user"],
-    "receiver": receiver,
-    "image_url": payload,
+        "sender": session["user"],
+        "receiver": receiver,
+        "image_url": url
     }).execute()
+
     return jsonify({"status":"ok"})
 
 @app.route('/get_messages')
@@ -240,59 +270,75 @@ def getMessages():
     receiver = request.args.get("receiver")
     me = session["user"]
     timestamp = request.args.get("timestamp")
-    
 
-
-    if timestamp and timestamp!="null":
+    if timestamp and timestamp != "null":
         messages = supabase.table("messages") \
-        .select("*") \
-        .or_(
-            f"and(sender.eq.{me},receiver.eq.{receiver}),"
-            f"and(sender.eq.{receiver},receiver.eq.{me})"
-        ) \
-        .order("time", desc=False) \
-        .gt("time", timestamp) \
-        .execute()
+            .select("*") \
+            .or_(
+                f"and(sender.eq.{me},receiver.eq.{receiver}),"
+                f"and(sender.eq.{receiver},receiver.eq.{me})"
+            ) \
+            .order("time", desc=False) \
+            .gt("time", timestamp) \
+            .execute()
     else:
         messages = supabase.table("messages") \
+            .select("*") \
+            .or_(
+                f"and(sender.eq.{me},receiver.eq.{receiver}),"
+                f"and(sender.eq.{receiver},receiver.eq.{me})"
+            ) \
+            .order("time", desc=False) \
+            .execute()
+
+    return jsonify(messages.data)
+
+
+@app.route("/reveal_message")
+def revealMessage():
+
+    msg_id = request.args.get("id")
+    me = session["user"]
+
+    # fetch message row
+    row = supabase.table("messages") \
         .select("*") \
-        .or_(
-            f"and(sender.eq.{me},receiver.eq.{receiver}),"
-            f"and(sender.eq.{receiver},receiver.eq.{me})"
-        ) \
-        .order("time", desc=False) \
+        .eq("id", msg_id) \
+        .single() \
         .execute()
-    print(messages.data )
-    messages=messages.data
 
-    my_priv = supabase.table("users") \
-    .select("private_key") \
-    .eq("username", session['user']) \
-    .single() \
-    .execute()
+    row = row.data
 
-    receiver_priv = supabase.table("users") \
-    .select("private_key") \
-    .eq("username", receiver) \
-    .single() \
-    .execute()
+    sender = row["sender"]
+    receiver = row["receiver"]
 
-    my_priv=my_priv.data["private_key"]
-    my_priv=json.loads(my_priv)
-    receiver_priv=receiver_priv.data["private_key"]
-    receiver_priv=json.loads(receiver_priv)
+    # only chat members can reveal
+    if me != sender and me != receiver:
+        return jsonify({"error": "unauthorized"}), 403
 
-    for i in messages:
-        print(i)
-        temp = i['image_url']
-        cipher = list(map(int, temp.split(",")))
-        if(i['sender']==session['user']):
-            msg = decrypt(cipher, receiver_priv)
-        else:
-            msg = decrypt(cipher, my_priv)
+    # decide whose private key is needed
+    # always receiver's private key
+    target_user = receiver
 
-        i['image_url']=msg
-    return jsonify(messages)
+    priv_res = supabase.table("users") \
+        .select("private_key") \
+        .eq("username", target_user) \
+        .single() \
+        .execute()
+
+    priv = json.loads(priv_res.data["private_key"])
+
+    from auth.Stego import reveal_text_from_url
+
+    hidden = reveal_text_from_url(row["image_url"])
+
+    cipher = list(map(int, hidden.split(",")))
+
+    msg = decrypt(cipher, priv)
+
+    return jsonify({"text": msg})
+
+
 
 # [{'id': '6b5ad12d-aae8-4f5e-ae43-1520c740ee21', 'sender': 'd1', 'receiver': 'dev', 'image_url': '3352228,4763535,5497629', 'time': '2026-02-03T13:47:25.385175'}, {'id': '507f231a-5098-4884-a1cf-d4261ced84c0', 'sender': 'd1', 'receiver': 'dev', 'image_url': '4763535,5497629', 'time': '2026-02-03T13:47:44.464134'}]
 
