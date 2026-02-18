@@ -9,6 +9,8 @@ import json
 from auth.carrier import get_random_image
 from auth.Stego import hide_text_in_image
 from auth.stego_toolkit import hide_file_in_image, reveal_file_from_image
+from dotenv import load_dotenv
+load_dotenv()
 from io import BytesIO
 import uuid
 import os
@@ -16,7 +18,7 @@ import re
 
 
 app = Flask(__name__)
-app.secret_key = "STEGOSAFE_SECRET"  
+app.secret_key = os.getenv("SECRET_KEY") 
 
 
 @app.route("/")
@@ -794,4 +796,4 @@ def reset_password():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run()
