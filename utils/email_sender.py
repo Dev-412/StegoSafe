@@ -19,15 +19,21 @@ def send_email_core(to_email, subject, html_content):
     msg.attach(part)
 
     try:
-        server = smtplib.SMTP('smtp.gmail.com', 587)
+        if not SENDER_PASSWORD:
+            print("Missing Email_key environment variable")
+            return False
+
+        server = smtplib.SMTP('smtp.gmail.com', 587, timeout=10)
         server.starttls()
         server.login(SENDER_EMAIL, SENDER_PASSWORD)
         server.sendmail(SENDER_EMAIL, to_email, msg.as_string())
         server.quit()
         return True
+
     except Exception as e:
         print(f"Failed to send email: {e}")
         return False
+
 
 def get_base_template(content):
     return f"""
