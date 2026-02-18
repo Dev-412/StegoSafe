@@ -462,17 +462,37 @@ def RecentChats():
 @app.route('/fetch_profile')
 def fetchProfile():
     name = request.args.get("name")
-    users = supabase.table("users") \
-    .select("user_profiles(profile_pic, status)") \
-    .eq("username",name)\
-    .single()\
-    .execute()
-    print(users.data)
-    profile_data = users.data['user_profiles']
-    return jsonify({
-        "pfp": profile_data['profile_pic'],
-        "status": profile_data['status']
-    })
+    try:
+        users = supabase.table("users") \
+        .select("user_profiles(profile_pic, status)") \
+        .eq("username",name)\
+        .single()\
+        .execute()
+        
+        if not users.data:
+            raise Exception("User not found")
+            
+        profile_data = users.data['user_profiles']
+        
+        # Check if profile_data is None (user exists but no profile)
+        if not profile_data:
+             # Return default if profile missing
+            return jsonify({
+                "pfp": "https://qliexogopxzdabruzeqb.supabase.co/storage/v1/object/public/avatars/default/blank.png",
+                "status": False
+            })
+
+        return jsonify({
+            "pfp": profile_data.get('profile_pic', "https://qliexogopxzdabruzeqb.supabase.co/storage/v1/object/public/avatars/default/blank.png"),
+            "status": profile_data.get('status', False)
+        })
+    except Exception as e:
+        print(f"Error fetching profile for {name}: {e}")
+        # Return default profile on any error to prevent dashboard crash
+        return jsonify({
+            "pfp": "https://qliexogopxzdabruzeqb.supabase.co/storage/v1/object/public/avatars/default/blank.png",
+            "status": False
+        })
 
 @app.route("/unrevealed_counts")
 def unrevealedCounts():
