@@ -1,96 +1,165 @@
-<html>
-    <head>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+{% extends "base.html" %}
 
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+{% block title %}Dashboard | StegoSafe{% endblock %}
 
-        <link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}">
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+{% endblock %}
 
-    </head>
-    <body class="{{ theme|lower }}-theme">
-        <nav class="navbar bg-body-tertiary px-3">
-        <div class="container-fluid d-flex align-items-center">
+{% block navbar %}{% endblock %}
+{% block footer %}{% endblock %}
 
-            <button class="btn search-button me-2"
-                type="button"
-                data-bs-toggle="offcanvas"
-                data-bs-target="#chatDrawer">
-                ☰ Chats
-            </button>
+{% block content %}
+<!-- Top Navbar -->
+<nav class="sticky top-0 z-50 px-6 py-4 glass-panel border-b border-white/5 flex-none">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+        <a href="/dashboard" class="flex items-center gap-3 group">
+            <div
+                class="relative w-10 h-10 flex items-center justify-center rounded-xl transition-all duration-300 group-hover:scale-110">
+                <img src="{{ url_for('static', filename='images/logo.svg') }}" alt="StegoSafe Logo"
+                    class="w-full h-full">
+            </div>
+            <span
+                class="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-brand-300 to-accent-blue group-hover:from-brand-300 group-hover:to-white transition-all duration-300">
+                StegoSafe
+            </span>
+        </a>
+
+        <div class="flex items-center gap-6">
+            <a href="/profile" class="text-sm font-medium text-muted hover:text-brand-400 transition-colors">Profile</a>
+            <a href="/logout"
+                class="px-5 py-2 text-sm font-semibold text-white bg-red-500/80 border border-red-500/20 rounded-lg hover:bg-red-500 hover:border-red-500 transition-all duration-300">
+                Logout
+            </a>
+        </div>
+    </div>
+</nav>
+
+<div class="flex-1 flex flex-col md:flex-row min-h-0 overflow-hidden">
+
+    <!-- Sidebar / Navigation -->
+    <aside
+        class="w-full md:w-20 lg:w-64 glass-panel border-r border-slate-700/50 flex flex-col items-center py-6 fixed md:relative z-20 bottom-0 md:bottom-auto md:h-full">
 
 
-            <!-- Brand / Left -->
-            <a class="navbar-brand fw-bold d-flex align-items-center gap-2" onclick="location.href='/dashboard'">
-                <img class="lock-icon"
-                src="https://cdn-icons-png.flaticon.com/512/3064/3064197.png" width="40" height="40">
-                <h1 class="mb-0 fs-4">StegoSafe</h1>
+        <!-- Nav Links -->
+        <nav class="flex md:flex-col gap-2 w-full px-4 justify-around md:justify-start">
+            <a href="/dashboard"
+                class="flex flex-col md:flex-row items-center md:gap-3 p-3 rounded-xl bg-brand-500/10 text-brand-400">
+                <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                </svg>
+                <span class="text-xs md:text-sm font-medium hidden lg:block">Chats</span>
             </a>
 
-            <!-- Center-Right Search -->
-            <form class="d-flex mx-auto" role="search" style="max-width: 300px; width: 100%;">
-                <input 
-                    class="form-control me-2" 
-                    type="search" 
-                    placeholder="Search" 
-                    name = 'search'
-                    id="searchbox"
-                />
-            </form>
+            <a href="/profile"
+                class="flex flex-col md:flex-row items-center md:gap-3 p-3 rounded-xl text-muted hover:bg-white/5 hover:text-main transition-colors">
+                <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                </svg>
+                <span class="text-xs md:text-sm font-medium hidden lg:block">Profile</span>
+            </a>
 
-            <!-- Profile Section Right -->
-            <div class="d-flex align-items-center gap-2 profile-area" onclick="location.href='/profile'">
+            <div class="h-px bg-slate-700/50 my-2 hidden md:block"></div>
 
-                <span class="fw-semibold fs-4">{{username}}</span>
-
-                <img 
-                    src="{{pfp}}" 
-                    alt="Profile"
-                    width="50"
-                    height="50"
-                    class="rounded-circle object-fit-cover"
-                />
-
+            <div class="px-3 mb-2 hidden lg:block">
+                <span class="text-xs font-semibold text-muted uppercase tracking-wider">Tools</span>
             </div>
-        </div>
+
+            <a href="/tools/encrypt"
+                class="flex flex-col md:flex-row items-center md:gap-3 p-3 rounded-xl text-muted hover:bg-white/5 hover:text-main transition-colors">
+                <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                </svg>
+                <span class="text-xs md:text-sm font-medium hidden lg:block">Encrypt</span>
+            </a>
+
+            <a href="/tools/decrypt"
+                class="flex flex-col md:flex-row items-center md:gap-3 p-3 rounded-xl text-muted hover:bg-white/5 hover:text-main transition-colors">
+                <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z" />
+                </svg>
+                <span class="text-xs md:text-sm font-medium hidden lg:block">Decrypt</span>
+            </a>
+
+            <!-- Mobile Only Tools Link (to offcanvas/modal if needed, but here simple links) -->
         </nav>
 
-        <div class="offcanvas offcanvas-start glass-offcanvas" tabindex="-1" id="chatDrawer">
-            <div class="offcanvas-header">
-                <!-- <h5 class="offcanvas-title">Recent Chats</h5> -->
-                <button type="button"class="btn-close"data-bs-dismiss="offcanvas"></button>
+        <!-- User Profile (Desktop Footer) -->
+        <div class="mt-auto p-4 w-full hidden md:block">
+            <div class="flex items-center gap-3 p-3 rounded-xl glass-panel bg-slate-800/50 border border-slate-700/50">
+                <img src="{{pfp}}" class="w-10 h-10 rounded-full object-cover border border-slate-600">
+                <div class="flex-1 min-w-0 hidden lg:block">
+                    <p class="text-sm font-medium text-main truncate">{{username}}</p>
+                    <p class="text-xs text-brand-400">Online</p>
+                </div>
+                <a href="/logout" class="text-muted hover:text-red-400 hidden lg:block">
+                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                    </svg>
+                </a>
             </div>
-        <div class="offcanvas-body">
+        </div>
+    </aside>
 
-        <input class="form-control mb-3"
-               placeholder="Search chats..."
-               id="drawerSearch">
+    <!-- Main Content -->
+    <main class="flex-1 flex flex-col min-h-0 overflow-hidden relative">
+        <!-- Top Header Mobile -->
+        <div class="md:hidden flex-none flex items-center justify-between p-4 mb-2">
+            <div class="flex items-center gap-2">
+                <img src="{{pfp}}" class="w-10 h-10 rounded-full object-cover border border-slate-600">
+                <div class="flex flex-col">
+                    <span class="text-lg font-bold text-main leading-none">{{username}}</span>
+                    <span class="text-xs text-muted">Online</span>
+                </div>
+            </div>
+            <a href="/logout" class="p-2 text-muted hover:text-red-400 transition-colors">
+                <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                </svg>
+            </a>
+        </div>
 
-        <div id="recentChats" class="nav-search-results"></div>
+        <div class="max-w-4xl mx-auto w-full flex-1 flex flex-col min-h-0">
+            <!-- Fixed Header & Search -->
+            <div class="flex-none px-4 md:px-8 pt-4 md:pt-8 pb-4">
+                <div class="mb-6">
+                    <h1 class="text-3xl font-bold text-main mb-2">Messages</h1>
+                    <p class="text-muted">Search for users and start secure conversations.</p>
+                </div>
 
-    </div>
-
-</div>
-
-
-    <div class="container mt-5">
-
-        <div class="row justify-content-center">
-
-            <div class="col-md-10 mx-auto">
-                <h5 class="section-title">Users</h5>
-
-
-                <div class="rounded-4 shadow-sm p-4 results-container">
-                    <div class="nav-search-results" id="searchResults">
-                                
+                <!-- Search -->
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                        <svg class="w-5 h-5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        </svg>
                     </div>
+                    <input type="search" id="searchbox"
+                        class="block w-full pl-12 pr-4 py-4 glass-input rounded-2xl text-lg focus:ring-2 focus:ring-brand-500/50 placeholder-slate-500"
+                        placeholder="Search users by username...">
                 </div>
             </div>
 
+            <!-- Scrollable Results Area -->
+            <div class="flex-1 overflow-y-auto px-4 md:px-8 pb-24 md:pb-8 custom-scrollbar">
+                <div id="searchResults" class="grid gap-4">
+                    <!-- Javascript will populate this -->
+                    <div class="text-center py-12">
+                        <div class="spinner border-brand-500"></div>
+                    </div>
+                </div>
+            </div>
         </div>
+    </main>
+</div>
 
-    </div>
-    <script src="{{ url_for('static', filename='dashboard.js') }}"></script>
-        
-    </body>
-</html>
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+{% endblock %}

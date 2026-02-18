@@ -1,9 +1,0 @@
-{% for user in users %}
-                                    {% if user.username != session["user"] %}
-                                        <a href="/chat/{{ user.username }}">
-                                        <div class="search-user">
-                                            <img src="{{user.user_profiles.profile_pic}}" width="50" height="50" class="rounded-circle object-fit-cover"> <h2>{{ user.username }}</h2>
-                                        </div>
-                                        </a>
-                                    {% endif %}
-                                {% endfor %}

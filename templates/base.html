@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en"
+    class="{% if session.get('theme') == 'Dark' %}dark{% elif session.get('theme') == 'Light' %}light{% endif %}">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StegoSafe | {% block title %}Secure Communication{% endblock %}</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    {% block styles %}{% endblock %}
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Outfit', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0fdfa',
+                            100: '#ccfbf1',
+                            200: '#99f6e4',
+                            300: '#5eead4',
+                            400: '#2dd4bf',
+                            500: '#14b8a6', // Primary Teal
+                            600: '#0d9488',
+                            700: '#0f766e',
+                            800: '#115e59',
+                            900: '#134e4a',
+                            950: '#042f2e',
+                        },
+                        dark: {
+                            900: '#0f172a', // Slate 900
+                            800: '#1e293b', // Slate 800
+                            700: '#334155', // Slate 700
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Removed inline styles as we use main.css -->
+</head>
+
+<body
+    class="font-sans antialiased min-h-screen flex flex-col selection:bg-brand-500 selection:text-white overflow-x-hidden">
+
+    <!-- Background Decoration -->
+    <div class="fixed inset-0 z-[-1] overflow-hidden pointer-events-none">
+        <div class="absolute top-[-10%] left-[-10%] w-96 h-96 bg-brand-500/20 rounded-full blur-[128px]"></div>
+        <div class="absolute bottom-[-10%] right-[-10%] w-96 h-96 bg-blue-600/20 rounded-full blur-[128px]"></div>
+    </div>
+
+    <!-- Navigation (Optional, can be overridden) -->
+    {% block navbar %}
+    <nav class="sticky top-0 z-50 px-6 py-4 glass-panel border-b-0 mb-8 z-50">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            <a href="/" class="flex items-center gap-3 group">
+                <div
+                    class="relative w-14 h-14 flex items-center justify-center rounded-xl transition-all duration-300 group-hover:scale-110">
+                    <img src="{{ url_for('static', filename='images/logo.svg') }}" alt="StegoSafe Logo"
+                        class="w-full h-full object-contain drop-shadow-lg">
+                </div>
+                <span
+                    class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-brand-400 to-blue-500 group-hover:from-brand-300 group-hover:to-blue-400 transition-all">
+                    StegoSafe
+                </span>
+            </a>
+
+            {% if session.get('user') %}
+            <div class="flex items-center gap-6">
+                <a href="/dashboard"
+                    class="text-sm font-medium text-muted hover:text-brand-400 transition-colors">Dashboard</a>
+                <a href="/profile"
+                    class="text-sm font-medium text-muted hover:text-brand-400 transition-colors">Profile</a>
+                <a href="/logout"
+                    class="px-5 py-2 text-sm font-semibold text-white bg-red-500/80 border border-red-500/20 rounded-lg hover:bg-red-500 hover:border-red-500 transition-all duration-300">
+                    Logout
+                </a>
+            </div>
+            {% else %}
+            <div class="flex items-center gap-4">
+                <a href="/login" class="text-sm font-medium text-muted hover:text-main transition-colors">Login</a>
+                <a href="/signup"
+                    class="px-5 py-2 text-sm font-semibold text-slate-900 bg-brand-400 rounded-lg hover:bg-brand-300 hover:shadow-[0_0_20px_rgba(45,212,191,0.3)] transition-all duration-300">
+                    Get Started
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </nav>
+    {% endblock %}
+
+    <!-- Flash Messages -->
+    <div class="fixed top-24 right-6 z-50 flex flex-col gap-2 pointer-events-none">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        {% for category, message in messages %}
+        <div
+            class="pointer-events-auto animate-slide-in px-6 py-4 rounded-xl glass-panel border-l-4 {{ 'border-red-500' if category == 'error' else 'border-brand-500' }} shadow-2xl flex items-center gap-3 min-w-[300px]">
+            {% if category == 'error' %}
+            <svg class="w-6 h-6 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            {% else %}
+            <svg class="w-6 h-6 text-brand-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            {% endif %}
+            <p class="text-sm font-medium text-main">{{ message }}</p>
+        </div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+    </div>
+
+    <!-- Main Content -->
+    <main class="flex-grow flex flex-col overflow-y-auto relative custom-scrollbar">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    {% block footer %}
+    <footer class="py-6 text-center text-slate-500 text-sm glass-panel border-t border-white/5">
+        <p>&copy; 2026 StegoSafe. Secure Communication Platform.</p>
+    </footer>
+    {% endblock %}
+
+    {% block scripts %}{% endblock %}
+</body>
+
+</html>

@@ -1,0 +1,120 @@
+/* ======================================================
+   STEGOSAFE — DASHBOARD UI
+   ====================================================== */
+
+/* Variables inherited from main.css */
+
+.navbar {
+    background: var(--navbar-bg);
+    backdrop-filter: blur(18px);
+    border-bottom: 1px solid var(--glass-border-color);
+    padding: 0.75rem 1.5rem;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+/* ---------- SEARCH ---------- */
+.search-container {
+    position: relative;
+    max-width: 400px;
+    width: 100%;
+}
+
+.search-input {
+    width: 100%;
+    padding: 10px 16px;
+    padding-left: 40px;
+    border-radius: 999px;
+    background: var(--input-bg);
+    border: 1px solid var(--input-border);
+    color: inherit;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: var(--brand-purple);
+    box-shadow: 0 0 10px rgba(168, 85, 247, 0.2);
+}
+
+/* ---------- RESULTS ---------- */
+.results-container {
+    height: calc(100vh - 80px);
+    /* Adjust based on navbar height */
+    overflow-y: auto;
+    border-right: 1px solid var(--glass-border-color);
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.section-title {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-muted);
+    margin-bottom: 1rem;
+    font-weight: 700;
+}
+
+.user-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    border-radius: 12px;
+    margin-bottom: 8px;
+    transition: 0.2s;
+    cursor: pointer;
+    background: transparent;
+}
+
+.user-card:hover {
+    background: var(--glass-panel-bg);
+    transform: translateX(4px);
+}
+
+.user-card img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid var(--brand-purple);
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-left: 6px;
+}
+
+.status-dot.online {
+    background: #22c55e;
+    box-shadow: 0 0 6px rgba(34, 197, 94, 0.6);
+}
+
+.status-dot.offline {
+    background: #94a3b8;
+}
+
+/* Offcanvas */
+.glass-offcanvas {
+    background: var(--navbar-bg);
+    backdrop-filter: blur(20px);
+    border-right: 1px solid var(--glass-border-color);
+    color: inherit;
+    width: 350px;
+}
+
+.glass-offcanvas .offcanvas-header {
+    border-bottom: 1px solid var(--glass-border-color);
+}
+
+.glass-offcanvas .close-btn {
+    filter: invert(1);
+    opacity: 0.7;
+}
+
+html.light .glass-offcanvas .close-btn {
+    filter: none;
+}

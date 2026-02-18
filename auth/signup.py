@@ -1,12 +1,18 @@
 from database.client import supabase
 from auth.RSA import *
-def signup_user(username, password):
+def signup_user(username, password, email):
+
+    # Check if email already exists
+    existing_user = supabase.table("users").select("email").eq("email", email).execute()
+    if existing_user.data:
+        return "Email already registered"
 
     pub, priv = generate_keys()
     # Insert into Supabase
     supabase.table("users").insert({
         "username": username,
         "password": password,  #hash password
+        "email": email,
         "public_key":pub,
         "private_key":priv
     }).execute()

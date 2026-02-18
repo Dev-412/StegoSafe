@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <defs>
+    <linearGradient id="mainGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#a855f7" /> <!-- Brand Purple -->
+      <stop offset="100%" stop-color="#2563eb" /> <!-- Accent Blue -->
+    </linearGradient>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="15" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+  
+  <!-- Group scaled to fit in 512x512 -->
+  <g transform="translate(256 256) scale(0.85) translate(-256 -256)">
+      <!-- Outer Shield/Hexagon Shape -->
+      <!-- Original Path bounds went to ~548, scaling by 0.85 brings it to ~465 which fits in 512 -->
+      <path d="M256 32L55 120v115c0 148 84 272 201 313 117-41 201-165 201-313V120L256 32z" 
+            fill="url(#mainGradient)" 
+            stroke="white" 
+            stroke-width="12"
+            opacity="0.95" />
+            
+      <!-- Inner "S" / Safe Pixel Design -->
+      <g transform="translate(136, 136) scale(0.47)">
+          <path fill="white" d="M256,0C114.6,0,0,114.6,0,256s114.6,256,256,256s256-114.6,256-256S397.4,0,256,0z M256,416c-88.4,0-160-71.6-160-160
+              c0-88.4,71.6-160,160-160c88.4,0,160,71.6,160,160C416,344.4,344.4,416,256,416z"/>
+          <rect x="196" y="156" width="120" height="200" rx="20" fill="white"/>
+          <circle cx="256" cy="236" r="30" fill="url(#mainGradient)"/>
+          <rect x="241" y="236" width="30" height="80" fill="url(#mainGradient)"/>
+      </g>
+      
+      <!-- Data Node Accents -->
+      <circle cx="256" cy="90" r="12" fill="white" opacity="0.8" />
+      <circle cx="410" cy="200" r="8" fill="white" opacity="0.6" />
+      <circle cx="102" cy="200" r="8" fill="white" opacity="0.6" />
+  </g>
+</svg>

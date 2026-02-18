@@ -1,0 +1,128 @@
+/* ======================================================
+   STEGOSAFE — PROFILE UI
+   ====================================================== */
+
+/* Variables inherited from main.css */
+
+.profile-page {
+    max-width: 1150px;
+    margin: 40px auto;
+    padding: 0 20px;
+    display: grid;
+    grid-template-columns: 330px 1fr;
+    gap: 35px;
+}
+
+/* ---------- CARDS ---------- */
+.profile-card {
+    background: var(--glass-panel-bg);
+    border-radius: 18px;
+    border: 1px solid var(--glass-border-color);
+    padding: 28px;
+    text-align: center;
+    backdrop-filter: blur(12px);
+}
+
+.profile-avatar {
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--brand-purple);
+    margin-bottom: 1rem;
+}
+
+/* ---------- SETTINGS ---------- */
+.settings-card {
+    background: var(--glass-panel-bg);
+    border-radius: 18px;
+    border: 1px solid var(--glass-border-color);
+    padding: 32px;
+    backdrop-filter: blur(12px);
+}
+
+.settings-card h3 {
+    margin-bottom: 1rem;
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+.settings-card input,
+.settings-card textarea,
+.theme-select {
+    width: 100%;
+    background: var(--input-bg);
+    border: 1px solid --input-border;
+    border-radius: 12px;
+    padding: 13px;
+    color: inherit;
+    margin-bottom: 18px;
+}
+
+/* ---------- THEME SELECT ---------- */
+.theme-select {
+    appearance: none;
+    background-image: url("data:image/svg+xml;utf8,<svg fill='white' height='16' width='16' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'><polygon points='0,0 20,0 10,10'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    background-size: 12px;
+    cursor: pointer;
+}
+
+html.light .theme-select {
+    background-image: url("data:image/svg+xml;utf8,<svg fill='black' height='16' width='16' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'><polygon points='0,0 20,0 10,10'/></svg>");
+}
+
+.theme-select option {
+    background: var(--bg-main);
+    color: var(--text-main);
+}
+
+/* ---------- BUTTONS ---------- */
+.profile-btn {
+    width: 100%;
+    padding: 12px;
+    border-radius: 12px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: all 0.2s ease;
+}
+
+.btn-accent {
+    background: var(--brand-purple);
+    color: white;
+}
+
+.btn-secondary {
+    background: rgba(255, 255, 255, 0.1);
+    color: inherit;
+    border: 1px solid var(--glass-border-color);
+}
+
+.btn-danger {
+    background: #ef4444;
+    color: white;
+}
+
+.btn-accent:hover,
+.btn-secondary:hover,
+.btn-danger:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.1);
+}
+
+/* Danger Zone */
+.danger-section {
+    margin-top: 35px;
+    border-top: 1px solid var(--glass-border-color);
+    padding-top: 25px;
+}
+
+@media (max-width: 768px) {
+    .profile-page {
+        grid-template-columns: 1fr;
+        margin-top: 20px;
+    }
+}
